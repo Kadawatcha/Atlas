@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.kadawatcha.app.ui.NewAccountScreen
 import com.kadawatcha.app.ui.PasswordScreen
 import com.kadawatcha.app.ui.theme.AppTheme
 
@@ -21,23 +22,26 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AppTheme {
-                val navController = rememberNavController()
+                val navController = rememberNavController() // Gestionnaire de nav
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = "login",
+                        startDestination = "login", // Écran de départ
                         modifier = Modifier.padding(innerPadding)
                     ) {
-                        composable("login") {
+                        composable("login") { // Route login
                             PasswordScreen(
                                 onNavigateToCreateAccount = {
-                                    navController.navigate("create_account")
+                                    navController.navigate("create_account") // Action: va vers création
                                 }
                             )
                         }
-                        composable("create_account") {
-                            // Remplacez ceci par votre futur écran de création de compte
-                            Text("Page de création de compte")
+                        composable("create_account") { // Route création
+                            NewAccountScreen(
+                                onBackToLogin = {
+                                    navController.popBackStack() // Action: retour arrière
+                                }
+                            )
                         }
                     }
                 }
