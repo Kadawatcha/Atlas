@@ -2,8 +2,10 @@ package com.kadawatcha.app.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -16,7 +18,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun NewAccountScreen(
-    onBackToLogin: () -> Unit
+    onBackToLogin: () -> Unit // Callback: action vide (Unit) vers login
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -33,8 +35,23 @@ fun NewAccountScreen(
 
         // Ajoutez vos champs de saisie ici (Nom, Email, etc.)
 
-        Button(onClick = onBackToLogin) {
-            Text("Retour à la connexion")
+        Row(
+            modifier = Modifier.fillMaxWidth(0.8f),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                onClick = { /* TODO: Implement account creation */ }
+            ) {
+                Text("Créer le compte")
+            }
+
+            Button(
+                modifier = Modifier.weight(1f),
+                onClick = onBackToLogin
+            ) {
+                Text("Log in")
+            }
         }
     }
 }
