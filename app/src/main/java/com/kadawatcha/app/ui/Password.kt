@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun PasswordScreen(
     modifier: Modifier = Modifier, // pour le style
-    onNavigateToCreateAccount: () -> Unit
+    onNavigateToCreateAccount: () -> Unit // Callback: action vide (Unit) vers création
 ) {
     var username by rememberSaveable { mutableStateOf("") }
     var emptyuser by rememberSaveable { mutableStateOf(false) }
