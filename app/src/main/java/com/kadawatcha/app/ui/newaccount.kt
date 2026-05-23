@@ -7,12 +7,27 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -20,20 +35,47 @@ import androidx.compose.ui.unit.sp
 fun NewAccountScreen(
     onBackToLogin: () -> Unit // Callback: action vide (Unit) vers login
 ) {
+    var username by rememberSaveable { mutableStateOf( "") }
+    var password by rememberSaveable {mutableStateOf("")}
+    var repeatpassword by rememberSaveable {mutableStateOf("")}
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Créer un compte",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold
+        PageTitle(
+            text = "FaceGrook\nCreate account",
+            )
+
+        Spacer(Modifier.height(25.dp))
+
+        CustomInput(
+            value = username,
+            onValueChange = { username = it },
+            label = "Username"
         )
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(16.dp))
 
-        // Ajoutez vos champs de saisie ici (Nom, Email, etc.)
+        CustomInput(
+            value = password,
+            onValueChange = { password = it },
+            label = "Password",
+            visualTransformation = PasswordVisualTransformation()
+        )
+
+        Spacer(Modifier.height(16.dp))
+
+        CustomInput(
+            value = repeatpassword,
+            onValueChange = { repeatpassword = it },
+            label = "Repeat Password",
+            visualTransformation = PasswordVisualTransformation(),
+            isError = password.isNotEmpty() && repeatpassword.isNotEmpty() && password != repeatpassword
+        )
+
+        Spacer(Modifier.height(24.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(0.8f),
@@ -41,17 +83,19 @@ fun NewAccountScreen(
         ) {
             Button(
                 modifier = Modifier.weight(1f),
-                onClick = { /* TODO: Implement account creation */ }
-            ) {
-                Text("Créer le compte")
-            }
-
-            Button(
-                modifier = Modifier.weight(1f),
                 onClick = onBackToLogin
             ) {
                 Text("Log in")
             }
+            Button(
+                modifier = Modifier.weight(1f),
+                onClick = { /* TODO: Implement account creation */ }
+            ) {
+                Text("Create account")
+            }
         }
     }
 }
+
+
+
