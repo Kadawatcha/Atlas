@@ -35,6 +35,8 @@ class MainActivity : ComponentActivity() {
                                     navController.navigate("create_account") {
                                         // Évite de créer plusieurs fois l'écran s'il est déjà en haut
                                         launchSingleTop = true
+                                        // Nettoie la pile pour éviter la surcharge mémoire
+                                        popUpTo("login") { saveState = true }
                                     }
                                 }
                             )
@@ -42,8 +44,10 @@ class MainActivity : ComponentActivity() {
                         composable("create_account") { // Route création
                             NewAccountScreen(
                                 onBackToLogin = {
-                                    navController.popBackStack() // Action: retour arrière
-
+                                    // popBackStack détruit l'écran actuel, libérant la RAM
+                                    if (navController.previousBackStackEntry != null) {
+                                        navController.popBackStack()
+                                    }
                                 }
                             )
                         }
