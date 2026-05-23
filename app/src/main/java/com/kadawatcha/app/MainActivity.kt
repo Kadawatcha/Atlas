@@ -32,7 +32,10 @@ class MainActivity : ComponentActivity() {
                         composable("login") { // Route login
                             PasswordScreen(
                                 onNavigateToCreateAccount = {
-                                    navController.navigate("create_account") // Action: va vers création
+                                    navController.navigate("create_account") {
+                                        // Évite de créer plusieurs fois l'écran s'il est déjà en haut
+                                        launchSingleTop = true
+                                    }
                                 }
                             )
                         }
@@ -40,6 +43,7 @@ class MainActivity : ComponentActivity() {
                             NewAccountScreen(
                                 onBackToLogin = {
                                     navController.popBackStack() // Action: retour arrière
+
                                 }
                             )
                         }

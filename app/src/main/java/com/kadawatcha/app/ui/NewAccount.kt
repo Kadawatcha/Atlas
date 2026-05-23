@@ -84,7 +84,7 @@ fun NewAccountScreen(
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)
         ) {
-            Text("← Back to login")
+            Text("<- Back to login")
         }
     }
 }
