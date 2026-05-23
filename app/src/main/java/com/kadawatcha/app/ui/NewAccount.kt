@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun NewAccountScreen(
-    onBackToLogin: () -> Unit // Action de retour vers le login
+    onBackToLogin: () -> Unit,
 ) {
     var username by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
@@ -81,7 +81,7 @@ fun NewAccountScreen(
         Button(
             onClick = onBackToLogin,
             modifier = Modifier
-                .align(Alignment.BottomEnd)
+                .align(Alignment.BottomStart)
                 .padding(16.dp)
         ) {
             Text("<- Back to login")
