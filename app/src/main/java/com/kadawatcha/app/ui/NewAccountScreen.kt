@@ -46,13 +46,7 @@ fun NewAccountScreen(
                     .align(Alignment.Center),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "Join Us",
-                    fontSize = 40.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = MaterialTheme.colorScheme.primary,
-                    letterSpacing = (-1).sp
-                )
+                PageTitle(text = "Join Us")
 
                 Text(
                     text = "Create your account",
