@@ -79,7 +79,7 @@ fun PasswordScreen(
 
                 )
 
-            Spacer(Modifier.height(10.dp))
+            Spacer(Modifier.height(20.dp))
 
             CustomInput(
                 value = password,
@@ -102,7 +102,7 @@ fun PasswordScreen(
 
             Spacer(
                 modifier = Modifier
-                    .height(20.dp)
+                    .height(24.dp)
             )
             Row(
                 modifier = Modifier.fillMaxWidth(0.8f),

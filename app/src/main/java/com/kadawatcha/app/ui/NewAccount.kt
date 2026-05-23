@@ -65,7 +65,7 @@ fun NewAccountScreen(
                 isError = usernameEmpty || usernameError || usernameAlreadyTaken
             )
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(20.dp))
 
             CustomInput(
                 value = password,
@@ -77,15 +77,15 @@ fun NewAccountScreen(
                 label = "Password",
                 visualTransformation = PasswordVisualTransformation(),
                 isError = passwordEmpty || passwordError || (password.isNotEmpty() && password.length < 8),
-                supportingText = {
-                    if (password.isNotEmpty() && password.length < 8) {
+                supportingText = if (password.isNotEmpty() && password.length < 8) {
+                    {
                         Text(text = "Too short",
-                            color =  androidx.compose.ui.graphics.Color.Magenta)
+                            color =  androidx.compose.ui.graphics.Color.LightGray)
                     }
-                }
+                } else null
             )
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(20.dp))
 
             CustomInput(
                 value = repeatPassword,
