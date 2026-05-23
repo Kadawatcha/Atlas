@@ -1,5 +1,6 @@
 package com.kadawatcha.app.ui
 
+import android.graphics.Color
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,7 @@ fun NewAccountScreen(
     var password by rememberSaveable { mutableStateOf("") }
     var passwordError by rememberSaveable { mutableStateOf(false) }
     var passwordEmpty by rememberSaveable { mutableStateOf(false) }
+    var passwordShort by rememberSaveable {mutableStateOf(false) }
 
     var repeatPassword by rememberSaveable { mutableStateOf("") }
     var repeatEmpty by rememberSaveable { mutableStateOf(false) }
@@ -74,7 +76,13 @@ fun NewAccountScreen(
                 },
                 label = "Password",
                 visualTransformation = PasswordVisualTransformation(),
-                isError = passwordEmpty || passwordError
+                isError = passwordEmpty || passwordError || (password.isNotEmpty() && password.length < 8),
+                supportingText = {
+                    if (password.isNotEmpty() && password.length < 8) {
+                        Text(text = "Too short",
+                            color =  androidx.compose.ui.graphics.Color.Magenta)
+                    }
+                }
             )
 
             Spacer(Modifier.height(16.dp))
@@ -83,8 +91,8 @@ fun NewAccountScreen(
                 value = repeatPassword,
                 onValueChange = { 
                     repeatPassword = it
-                    //repeatEmpty = false
-                    //repeatBad = false
+                    repeatEmpty = false
+                    repeatBad = false
                 },
                 label = "Repeat Password",
                 visualTransformation = PasswordVisualTransformation(),
@@ -112,6 +120,9 @@ fun NewAccountScreen(
                     when {
                         trimmedUsername.isEmpty() -> usernameEmpty = true
                         trimmedPassword.isEmpty() -> passwordEmpty = true
+                        trimmedPassword.length < 8 -> {
+                            // nada couleur et txt auto
+                        }
                         trimmedRepeatPassword.isEmpty() -> repeatEmpty = true
                         trimmedPassword != trimmedRepeatPassword -> repeatBad = true
                         else -> {
