@@ -55,7 +55,9 @@ fun PasswordScreen(
     Box(modifier = Modifier.fillMaxSize()) {
 
         Column(
-            modifier = modifier.fillMaxSize(),
+            modifier = modifier
+                .fillMaxSize()
+                .align(Alignment.Center),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -90,7 +92,12 @@ fun PasswordScreen(
                 label = "Enter password",
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                isError = passwordError || emptyPassword,
+                isError = passwordError || emptyPassword || (password.isNotEmpty() && password.length < 8),
+                supportingText = {
+                    if (password.isNotEmpty() && password.length < 8) {
+                        Text(text = "Too short")
+                    }
+                }
             )
 
             Spacer(
@@ -208,6 +215,7 @@ fun CustomInput(
     onValueChange: (String) -> Unit,
     label: String, // On passe juste le texte
     isError: Boolean = false,
+    supportingText: @Composable (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
@@ -216,6 +224,7 @@ fun CustomInput(
         onValueChange = onValueChange,
         label = { Text(label) }, // Le Text() est géré ici
         isError = isError,
+        supportingText = supportingText,
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
         singleLine = true, // Fixé ici car "il ne bouge jamais"
