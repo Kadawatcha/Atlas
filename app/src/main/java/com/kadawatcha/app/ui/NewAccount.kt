@@ -54,27 +54,41 @@ fun NewAccountScreen(
 
             CustomInput(
                 value = username,
-                onValueChange = { username = it },
-                label = "Username"
+                onValueChange = { 
+                    username = it
+                    usernameEmpty = false
+                    usernameError = false
+                },
+                label = "Username",
+                isError = usernameEmpty || usernameError || usernameAlreadyTaken
             )
 
             Spacer(Modifier.height(16.dp))
 
             CustomInput(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = { 
+                    password = it
+                    passwordEmpty = false
+                    passwordError = false
+                },
                 label = "Password",
-                visualTransformation = PasswordVisualTransformation()
+                visualTransformation = PasswordVisualTransformation(),
+                isError = passwordEmpty || passwordError
             )
 
             Spacer(Modifier.height(16.dp))
 
             CustomInput(
                 value = repeatPassword,
-                onValueChange = { repeatPassword = it },
+                onValueChange = { 
+                    repeatPassword = it
+                    //repeatEmpty = false
+                    //repeatBad = false
+                },
                 label = "Repeat Password",
                 visualTransformation = PasswordVisualTransformation(),
-                isError = password.isNotEmpty() && repeatPassword.isNotEmpty() && password != repeatPassword
+                isError = repeatEmpty || repeatBad
             )
 
             Spacer(Modifier.height(24.dp))
@@ -82,41 +96,45 @@ fun NewAccountScreen(
             Button(
                 modifier = Modifier.fillMaxWidth(0.8f),
                 onClick = {
-                    var trimmedUsername = username.trim()
-                    var trimmedPassword = password.trim()
-                    var trimmedRepeatPassword = repeatPassword.trim()
+                    val trimmedUsername = username.trim()
+                    val trimmedPassword = password.trim()
+                    val trimmedRepeatPassword = repeatPassword.trim()
 
+                    // Reset des erreurs
                     usernameEmpty = false
                     usernameError = false
                     usernameAlreadyTaken = false
-
                     passwordError = false
                     passwordEmpty = false
-
                     repeatEmpty = false
                     repeatBad = false
 
                     when {
-                        trimmedUsername.isEmpty() -> {
-                            usernameEmpty = true
+                        trimmedUsername.isEmpty() -> usernameEmpty = true
+                        trimmedPassword.isEmpty() -> passwordEmpty = true
+                        trimmedRepeatPassword.isEmpty() -> repeatEmpty = true
+                        trimmedPassword != trimmedRepeatPassword -> repeatBad = true
+                        else -> {
+                            // Ici, tout est bon !
+                            // Logique de création de compte
                         }
-
-                        trimmedPassword.isEmpty() -> {
-                            usernameEmpty = true
-                        }
-
-                        trimmedRepeatPassword.isEmpty() -> {
-                            repeatEmpty = true
-                        }
-
-
-
                     }
-
-
                 }
             ) {
                 Text("Create account")
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            // Affichage des messages d'erreurs
+            if (usernameEmpty) {
+                Text("Please enter a username", color = androidx.compose.ui.graphics.Color.Red)
+            } else if (passwordEmpty) {
+                Text("Please enter a password", color = androidx.compose.ui.graphics.Color.Red)
+            } else if (repeatEmpty) {
+                Text("Please repeat your password", color = androidx.compose.ui.graphics.Color.Red)
+            } else if (repeatBad) {
+                Text("Passwords do not match", color = androidx.compose.ui.graphics.Color.Red)
             }
         }
 
