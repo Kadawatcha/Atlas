@@ -1,12 +1,14 @@
 package com.kadawatcha.app.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -48,124 +50,139 @@ fun PasswordScreen(
 
     // Si check est ok on autorise le login
     var checkpassword by remember { mutableStateOf(false) }
-    var checkuser by remember { mutableStateOf(false)}
+    var checkuser by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
 
-        PageTitle(text="FakeGrook\nLogin")
-        Spacer(Modifier.height(25.dp))
-
-        CustomInput(
-            value = username,
-            onValueChange = {
-                username = it
-                usernameerror = false
-                emptyuser = false
-                checkuser = false
-            },
-            label = "Enter username",
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-            isError = usernameerror || emptyuser,
-
-        )
-
-        Spacer(Modifier.height(10.dp))
-
-        CustomInput(
-            value = password,
-            onValueChange = {
-                password = it
-                passworderror = false
-                emptypassword = false
-                checkpassword = false
-            },
-            label = "Enter password",
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            isError = passworderror || emptypassword,
-        )
-
-        Spacer(modifier = Modifier
-            .height(20.dp)
-        )
-        Row(modifier = Modifier.fillMaxWidth(0.8f),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-
+        Column(
+            modifier = modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Button(
-                onClick = {
-                    val trimmedPassword = password.trim()
-                    val trimmedUsername = username.trim()
-                    passworderror = false
-                    emptypassword = false
+            PageTitle(text = "FakeGrook\nLogin")
+            Spacer(Modifier.height(25.dp))
+
+            CustomInput(
+                value = username,
+                onValueChange = {
+                    username = it
                     usernameerror = false
                     emptyuser = false
-                    checkpassword = false
                     checkuser = false
+                },
+                label = "Enter username",
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                isError = usernameerror || emptyuser,
 
-                    when {
-                        trimmedUsername.isEmpty() -> {
-                            emptyuser = true
-                        }
+                )
 
-                        trimmedPassword.isEmpty() -> {
-                            emptypassword = true
-                        }
+            Spacer(Modifier.height(10.dp))
 
-                        trimmedUsername == "User1" -> {
-                            checkuser = true
-                            if (trimmedPassword == "Pass2") {
-                                usernameerror = false
-                                checkpassword = true
-                            } else {
+            CustomInput(
+                value = password,
+                onValueChange = {
+                    password = it
+                    passworderror = false
+                    emptypassword = false
+                    checkpassword = false
+                },
+                label = "Enter password",
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                isError = passworderror || emptypassword,
+            )
+
+            Spacer(
+                modifier = Modifier
+                    .height(20.dp)
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(0.8f),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+
+            ) {
+
+                Button(
+                    onClick = {
+                        val trimmedPassword = password.trim()
+                        val trimmedUsername = username.trim()
+                        passworderror = false
+                        emptypassword = false
+                        usernameerror = false
+                        emptyuser = false
+                        checkpassword = false
+                        checkuser = false
+
+                        when {
+                            trimmedUsername.isEmpty() -> {
+                                emptyuser = true
+                            }
+
+                            trimmedPassword.isEmpty() -> {
+                                emptypassword = true
+                            }
+
+                            trimmedUsername == "User1" -> {
                                 checkuser = true
-                                usernameerror = false
-                                passworderror = true
+                                if (trimmedPassword == "Pass2") {
+                                    usernameerror = false
+                                    checkpassword = true
+                                } else {
+                                    checkuser = true
+                                    usernameerror = false
+                                    passworderror = true
+                                }
+                            }
+
+                            else -> { // MDP rentré mais user inconnu, on n'affiche pas l'erreur sur le mdp donc
+                                // passworderror = true
+                                usernameerror = true
                             }
                         }
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Log in")
+                }
 
-                        else -> { // MDP rentré mais user inconnu, on n'affiche pas l'erreur sur le mdp donc
-                            // passworderror = true
-                            usernameerror = true
-                        }
-                    }
-                },
-                modifier = Modifier.weight(1f)
-            ) {
-                Text("Log in")
+
             }
+
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+
+            if (emptyuser) {
+                Text(text = "Please enter a username", color = Color.Red)
+            } else if (emptypassword) {
+                Text("Please enter a password", color = Color.Red)
+            } else if (usernameerror) {
+                Text(
+                    text = "Unknown user - Create an account",
+                    color = Color.Red
+                )
+            } else if (passworderror) {
+                Text(
+                    text = "Correct user but password is wrong",
+                    color = Color.Red
+                )
+            } else if (checkuser && checkpassword) {
+                Text(
+                    text = "Login success ! ",
+                    color = Color.Blue
+                )
+            }
+
+        }
 
         Button(
             onClick = onNavigateToCreateAccount,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp)
         ) {
-            Text("Create account")
-        }
-
-        }
-
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-
-        if (emptyuser) {
-            Text(text = "Please enter a username", color = Color.Red)
-        } else if (emptypassword) {
-            Text("Please enter a password", color = Color.Red)
-        } else if (usernameerror) {
-            Text(text = "Unknown user - Create an account",
-                color = Color.Red)
-        } else if (passworderror) {
-            Text(text = "Correct user but password is wrong",
-                color = Color.Red)
-        } else if (checkuser && checkpassword) {
-            Text(text = "Login success ! ",
-                color = Color.Blue)
+            Text("Create account ->")
         }
     }
 }
