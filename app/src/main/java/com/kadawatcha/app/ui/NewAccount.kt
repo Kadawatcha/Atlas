@@ -3,7 +3,6 @@ package com.kadawatcha.app.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,8 +26,18 @@ fun NewAccountScreen(
     onBackToLogin: () -> Unit,
 ) {
     var username by rememberSaveable { mutableStateOf("") }
+    var usernameError by rememberSaveable { mutableStateOf(false) }
+    var usernameEmpty by rememberSaveable { mutableStateOf(false) }
+    var usernameAlreadyTaken by rememberSaveable { mutableStateOf(false) }
+
+
     var password by rememberSaveable { mutableStateOf("") }
-    var repeatpassword by rememberSaveable { mutableStateOf("") }
+    var passwordError by rememberSaveable { mutableStateOf(false) }
+    var passwordEmpty by rememberSaveable { mutableStateOf(false) }
+
+    var repeatPassword by rememberSaveable { mutableStateOf("") }
+    var repeatEmpty by rememberSaveable { mutableStateOf(false) }
+    var repeatBad by rememberSaveable { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -61,24 +70,57 @@ fun NewAccountScreen(
             Spacer(Modifier.height(16.dp))
 
             CustomInput(
-                value = repeatpassword,
-                onValueChange = { repeatpassword = it },
+                value = repeatPassword,
+                onValueChange = { repeatPassword = it },
                 label = "Repeat Password",
                 visualTransformation = PasswordVisualTransformation(),
-                isError = password.isNotEmpty() && repeatpassword.isNotEmpty() && password != repeatpassword
+                isError = password.isNotEmpty() && repeatPassword.isNotEmpty() && password != repeatPassword
             )
 
             Spacer(Modifier.height(24.dp))
 
             Button(
                 modifier = Modifier.fillMaxWidth(0.8f),
-                onClick = { /* TODO */ }
+                onClick = {
+                    var trimmedUsername = username.trim()
+                    var trimmedPassword = password.trim()
+                    var trimmedRepeatPassword = repeatPassword.trim()
+
+                    usernameEmpty = false
+                    usernameError = false
+                    usernameAlreadyTaken = false
+
+                    passwordError = false
+                    passwordEmpty = false
+
+                    repeatEmpty = false
+                    repeatBad = false
+
+                    when {
+                        trimmedUsername.isEmpty() -> {
+                            usernameEmpty = true
+                        }
+
+                        trimmedPassword.isEmpty() -> {
+                            usernameEmpty = true
+                        }
+
+                        trimmedRepeatPassword.isEmpty() -> {
+                            repeatEmpty = true
+                        }
+
+
+
+                    }
+
+
+                }
             ) {
                 Text("Create account")
             }
         }
 
-        Button(
+        TextButton(
             onClick = onBackToLogin,
             modifier = Modifier
                 .align(Alignment.BottomStart)

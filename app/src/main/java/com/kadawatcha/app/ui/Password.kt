@@ -16,10 +16,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -40,17 +40,17 @@ fun PasswordScreen(
     onNavigateToCreateAccount: () -> Unit // Callback: action vide (Unit) vers création
 ) {
     var username by rememberSaveable { mutableStateOf("") }
-    var emptyuser by rememberSaveable { mutableStateOf(false) }
-    var usernameerror by remember { mutableStateOf(false) }
+    var emptyUser by rememberSaveable { mutableStateOf(false) }
+    var usernameError by rememberSaveable { mutableStateOf(false) }
 
-    var password by remember { mutableStateOf("") }
-    var passworderror by remember { mutableStateOf(false) }
-    var emptypassword by remember { mutableStateOf(false) }
+    var password by rememberSaveable { mutableStateOf("") }
+    var passwordError by rememberSaveable { mutableStateOf(false) }
+    var emptyPassword by rememberSaveable { mutableStateOf(false) }
 
 
     // Si check est ok on autorise le login
-    var checkpassword by remember { mutableStateOf(false) }
-    var checkuser by remember { mutableStateOf(false) }
+    var checkPassword by rememberSaveable { mutableStateOf(false) }
+    var checkUser by rememberSaveable { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -67,13 +67,13 @@ fun PasswordScreen(
                 value = username,
                 onValueChange = {
                     username = it
-                    usernameerror = false
-                    emptyuser = false
-                    checkuser = false
+                    usernameError = false
+                    emptyUser = false
+                    checkUser = false
                 },
                 label = "Enter username",
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                isError = usernameerror || emptyuser,
+                isError = usernameError || emptyUser,
 
                 )
 
@@ -83,14 +83,14 @@ fun PasswordScreen(
                 value = password,
                 onValueChange = {
                     password = it
-                    passworderror = false
-                    emptypassword = false
-                    checkpassword = false
+                    passwordError = false
+                    emptyPassword = false
+                    checkPassword = false
                 },
                 label = "Enter password",
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                isError = passworderror || emptypassword,
+                isError = passwordError || emptyPassword,
             )
 
             Spacer(
@@ -107,37 +107,37 @@ fun PasswordScreen(
                     onClick = {
                         val trimmedPassword = password.trim()
                         val trimmedUsername = username.trim()
-                        passworderror = false
-                        emptypassword = false
-                        usernameerror = false
-                        emptyuser = false
-                        checkpassword = false
-                        checkuser = false
+                        passwordError = false
+                        emptyPassword = false
+                        usernameError = false
+                        emptyUser = false
+                        checkPassword = false
+                        checkUser = false
 
                         when {
                             trimmedUsername.isEmpty() -> {
-                                emptyuser = true
+                                emptyUser = true
                             }
 
                             trimmedPassword.isEmpty() -> {
-                                emptypassword = true
+                                emptyPassword = true
                             }
 
                             trimmedUsername == "User1" -> {
-                                checkuser = true
+                                checkUser = true
                                 if (trimmedPassword == "Pass2") {
-                                    usernameerror = false
-                                    checkpassword = true
+                                    usernameError = false
+                                    checkPassword = true
                                 } else {
-                                    checkuser = true
-                                    usernameerror = false
-                                    passworderror = true
+                                    checkUser = true
+                                    usernameError = false
+                                    passwordError = true
                                 }
                             }
 
                             else -> { // MDP rentré mais user inconnu, on n'affiche pas l'erreur sur le mdp donc
-                                // passworderror = true
-                                usernameerror = true
+                                // passwordError = true
+                                usernameError = true
                             }
                         }
                     },
@@ -153,21 +153,21 @@ fun PasswordScreen(
             Spacer(modifier = Modifier.height(10.dp))
 
 
-            if (emptyuser) {
+            if (emptyUser) {
                 Text(text = "Please enter a username", color = Color.Red)
-            } else if (emptypassword) {
+            } else if (emptyPassword) {
                 Text("Please enter a password", color = Color.Red)
-            } else if (usernameerror) {
+            } else if (usernameError) {
                 Text(
                     text = "Unknown user - Create an account",
                     color = Color.Red
                 )
-            } else if (passworderror) {
+            } else if (passwordError) {
                 Text(
                     text = "Correct user but password is wrong",
                     color = Color.Red
                 )
-            } else if (checkuser && checkpassword) {
+            } else if (checkUser && checkPassword) {
                 Text(
                     text = "Login success ! ",
                     color = Color.Blue
@@ -176,7 +176,7 @@ fun PasswordScreen(
 
         }
 
-        Button(
+        TextButton(
             onClick = onNavigateToCreateAccount,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
