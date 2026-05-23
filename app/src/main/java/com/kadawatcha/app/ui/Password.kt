@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -57,14 +58,7 @@ fun PasswordScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Text(
-            text = "FaceGrook",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            textDecoration = TextDecoration.Underline,
-            fontStyle = FontStyle.Normal
-        )
-
+        PageTitle(text="FakeGrook\nLogin")
         Spacer(Modifier.height(25.dp))
 
         CustomInput(
@@ -149,7 +143,8 @@ fun PasswordScreen(
             }
 
         Button(
-            onClick = onNavigateToCreateAccount
+            onClick = onNavigateToCreateAccount,
+            modifier = Modifier.weight(1f)
         ) {
             Text("Create account")
         }
@@ -177,7 +172,19 @@ fun PasswordScreen(
     }
 }
 
-
+@Composable
+fun PageTitle(text: String, modifier: Modifier = Modifier) {
+    Text(
+        text = text,
+        fontSize = 32.sp,
+        fontWeight = FontWeight.Bold,
+        fontStyle = FontStyle.Normal,
+        lineHeight = 40.sp, // espace via les sauts a la ligne
+        // textDecoration = TextDecoration.Underline,
+        textAlign = TextAlign.Center, // Centrage horizontal des lignes
+        modifier = modifier.fillMaxWidth() // Prend toute la largeur pour que le centrage fonctionne
+    )
+}
 
 
 @Composable
