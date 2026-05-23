@@ -37,7 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kadawatcha.app.viewmodel.LoginViewModel
 
 @Composable
-fun PasswordScreen(
+fun LoginScreen(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = viewModel(),
     onNavigateToCreateAccount: () -> Unit

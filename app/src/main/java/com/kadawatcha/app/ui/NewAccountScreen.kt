@@ -29,12 +29,13 @@ import com.kadawatcha.app.viewmodel.NewAccountViewModel
 
 @Composable
 fun NewAccountScreen(
+    modifier: Modifier = Modifier,
     viewModel: NewAccountViewModel = viewModel(),
     onBackToLogin: () -> Unit,
 ) {
 
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -124,7 +125,7 @@ fun NewAccountScreen(
                                 .height(56.dp),
                             shape = RoundedCornerShape(16.dp),
                             onClick = {
-                                viewModel.onCreateAccountCLick()
+                                viewModel.onCreateAccountClick()
                             },
                         ) {
                             Text("Create Account", fontWeight = FontWeight.Bold, fontSize = 18.sp)

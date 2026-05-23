@@ -7,13 +7,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.kadawatcha.app.ui.LoginScreen
 import com.kadawatcha.app.ui.NewAccountScreen
-import com.kadawatcha.app.ui.PasswordScreen
 import com.kadawatcha.app.ui.theme.AppTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,32 +21,26 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AppTheme {
-                val navController = rememberNavController() // Gestionnaire de nav
+                val navController = rememberNavController()
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = "login", // Écran de départ
-                        modifier = Modifier.fillMaxSize().padding(innerPadding)
+                        startDestination = "login",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
                     ) {
-                        composable("login") { // Route login
-                            PasswordScreen(
+                        composable("login") {
+                            LoginScreen(
                                 onNavigateToCreateAccount = {
-                                    navController.navigate("create_account") {
-                                        // Évite de créer plusieurs fois l'écran s'il est déjà en haut
-                                        launchSingleTop = true
-                                        // Nettoie la pile pour éviter la surcharge mémoire
-                                        popUpTo("login") { saveState = true }
-                                    }
+                                    navController.navigate("create_account")
                                 }
                             )
                         }
-                        composable("create_account") { // Route création
+                        composable("create_account") {
                             NewAccountScreen(
                                 onBackToLogin = {
-                                    // popBackStack détruit l'écran actuel, libérant la RAM
-                                    if (navController.previousBackStackEntry != null) {
-                                        navController.popBackStack()
-                                    }
+                                    navController.popBackStack()
                                 }
                             )
                         }
