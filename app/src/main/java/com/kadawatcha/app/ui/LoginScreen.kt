@@ -23,10 +23,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -37,19 +33,15 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kadawatcha.app.viewmodel.LoginViewModel
 
 @Composable
 fun PasswordScreen(
     modifier: Modifier = Modifier,
+    viewModel: LoginViewModel = viewModel(),
     onNavigateToCreateAccount: () -> Unit
 ) {
-    var username by rememberSaveable { mutableStateOf("") }
-    var emptyUser by rememberSaveable { mutableStateOf(false) }
-    var usernameError by rememberSaveable { mutableStateOf(false) }
-
-    var password by rememberSaveable { mutableStateOf("") }
-    var passwordError by rememberSaveable { mutableStateOf(false) }
-    var emptyPassword by rememberSaveable { mutableStateOf(false) }
 
     // Utilisation d'une Surface pour un fond doux
     Surface(
@@ -72,7 +64,7 @@ fun PasswordScreen(
                     color = MaterialTheme.colorScheme.primary,
                     letterSpacing = (-1).sp
                 )
-                
+
                 Text(
                     text = "Welcome back!",
                     fontSize = 16.sp,
@@ -94,56 +86,39 @@ fun PasswordScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         CustomInput(
-                            value = username,
+                            value = viewModel.username,
                             onValueChange = {
-                                username = it
-                                usernameError = false
-                                emptyUser = false
+                                viewModel.username = it
+                                viewModel.usernameError = false
+                                viewModel.emptyUser = false
                             },
                             label = "Username",
                             leadingIcon = Icons.Default.Person,
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                            isError = usernameError || emptyUser
+                            isError = viewModel.usernameError || viewModel.emptyUser
                         )
 
                         Spacer(Modifier.height(16.dp))
 
                         CustomInput(
-                            value = password,
+                            value = viewModel.password,
                             onValueChange = {
-                                password = it
-                                passwordError = false
-                                emptyPassword = false
+                                viewModel.password = it
+                                viewModel.passwordError = false
+                                viewModel.emptyPassword = false
                             },
                             label = "Password",
                             leadingIcon = Icons.Default.Lock,
                             visualTransformation = PasswordVisualTransformation(),
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                            isError = passwordError || emptyPassword )
+                            isError = viewModel.passwordError || viewModel.emptyPassword
+                        )
 
                         Spacer(Modifier.height(24.dp))
 
                         Button(
                             onClick = {
-                                val trimmedPassword = password.trim()
-                                val trimmedUsername = username.trim()
-                                passwordError = false
-                                emptyPassword = false
-                                usernameError = false
-                                emptyUser = false
-
-                                when {
-                                    trimmedUsername.isEmpty() -> emptyUser = true
-                                    trimmedPassword.isEmpty() -> emptyPassword = true
-                                    trimmedUsername == "User1" -> {
-                                        if (trimmedPassword == "Pass2") {
-                                            usernameError = false
-                                        } else {
-                                            passwordError = true
-                                        }
-                                    }
-                                    else -> usernameError = true
-                                }
+                                viewModel.onLoginClick()
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -154,14 +129,14 @@ fun PasswordScreen(
                         }
 
                         // Messages d'erreurs intégrés plus proprement
-                        if (emptyUser || emptyPassword || usernameError || passwordError) {
+                        if (viewModel.emptyUser || viewModel.emptyPassword || viewModel.usernameError || viewModel.passwordError) {
                             Spacer(Modifier.height(12.dp))
                             Text(
                                 text = when {
-                                    emptyUser -> "Username is required"
-                                    emptyPassword -> "Password is required"
-                                    usernameError -> "User not found"
-                                    passwordError -> "Incorrect password"
+                                    viewModel.emptyUser -> "Username is required"
+                                    viewModel.emptyPassword -> "Password is required"
+                                    viewModel.usernameError -> "User not found"
+                                    viewModel.passwordError -> "Incorrect password"
                                     else -> ""
                                 },
                                 color = MaterialTheme.colorScheme.error,

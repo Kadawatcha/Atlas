@@ -18,33 +18,20 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kadawatcha.app.viewmodel.NewAccountViewModel
 
 @Composable
 fun NewAccountScreen(
+    viewModel: NewAccountViewModel = viewModel(),
     onBackToLogin: () -> Unit,
 ) {
-    var username by rememberSaveable { mutableStateOf("") }
-    var usernameError by rememberSaveable { mutableStateOf(false) }
-    var usernameEmpty by rememberSaveable { mutableStateOf(false) }
-    var usernameAlreadyTaken by rememberSaveable { mutableStateOf(false) }
-
-    var password by rememberSaveable { mutableStateOf("") }
-    var passwordError by rememberSaveable { mutableStateOf(false) }
-    var passwordEmpty by rememberSaveable { mutableStateOf(false) }
-
-    var repeatPassword by rememberSaveable { mutableStateOf("") }
-    var repeatEmpty by rememberSaveable { mutableStateOf(false) }
-    var repeatBad by rememberSaveable { mutableStateOf(false) }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -85,31 +72,31 @@ fun NewAccountScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         CustomInput(
-                            value = username,
+                            value = viewModel.username,
                             onValueChange = {
-                                username = it
-                                usernameEmpty = false
-                                usernameError = false
+                                viewModel.username = it
+                                viewModel.usernameEmpty = false
+                                viewModel.usernameError = false
                             },
                             label = "Username",
                             leadingIcon = Icons.Default.Person,
-                            isError = usernameEmpty || usernameError || usernameAlreadyTaken
+                            isError = viewModel.usernameEmpty || viewModel.usernameError || viewModel.usernameAlreadyTaken
                         )
 
                         Spacer(Modifier.height(16.dp))
 
                         CustomInput(
-                            value = password,
+                            value = viewModel.password,
                             onValueChange = {
-                                password = it
-                                passwordEmpty = false
-                                passwordError = false
+                                viewModel.password = it
+                                viewModel.passwordEmpty = false
+                                viewModel.passwordError = false
                             },
                             label = "Password",
                             leadingIcon = Icons.Default.Lock,
                             visualTransformation = PasswordVisualTransformation(),
-                            isError = passwordEmpty || passwordError || (password.isNotEmpty() && password.length < 8),
-                            supportingText = if (password.isNotEmpty() && password.length < 8) {
+                            isError = viewModel.passwordEmpty || viewModel.passwordError || (viewModel.password.isNotEmpty() && viewModel.password.length < 8),
+                            supportingText = if (viewModel.password.isNotEmpty() && viewModel.password.length < 8) {
                                 { Text(text = "Must be 8+ characters") }
                             } else null
                         )
@@ -117,16 +104,16 @@ fun NewAccountScreen(
                         Spacer(Modifier.height(16.dp))
 
                         CustomInput(
-                            value = repeatPassword,
+                            value = viewModel.repeatPassword,
                             onValueChange = {
-                                repeatPassword = it
-                                repeatEmpty = false
-                                repeatBad = false
+                                viewModel.repeatPassword = it
+                                viewModel.repeatEmpty = false
+                                viewModel.repeatBad = false
                             },
                             label = "Repeat Password",
                             leadingIcon = Icons.Default.Lock,
                             visualTransformation = PasswordVisualTransformation(),
-                            isError = repeatEmpty || repeatBad
+                            isError = viewModel.repeatEmpty || viewModel.repeatBad
                         )
 
                         Spacer(Modifier.height(24.dp))
@@ -137,41 +124,20 @@ fun NewAccountScreen(
                                 .height(56.dp),
                             shape = RoundedCornerShape(16.dp),
                             onClick = {
-                                val trimmedUsername = username.trim()
-                                val trimmedPassword = password.trim()
-                                val trimmedRepeatPassword = repeatPassword.trim()
-
-                                usernameEmpty = false
-                                usernameError = false
-                                usernameAlreadyTaken = false
-                                passwordError = false
-                                passwordEmpty = false
-                                repeatEmpty = false
-                                repeatBad = false
-
-                                when {
-                                    trimmedUsername.isEmpty() -> usernameEmpty = true
-                                    trimmedPassword.isEmpty() -> passwordEmpty = true
-                                    trimmedPassword.length < 8 -> {}
-                                    trimmedRepeatPassword.isEmpty() -> repeatEmpty = true
-                                    trimmedPassword != trimmedRepeatPassword -> repeatBad = true
-                                    else -> {
-                                        // Succès !
-                                    }
-                                }
-                            }
+                                viewModel.onCreateAccountCLick()
+                            },
                         ) {
                             Text("Create Account", fontWeight = FontWeight.Bold, fontSize = 18.sp)
                         }
 
-                        if (usernameEmpty || passwordEmpty || repeatEmpty || repeatBad) {
+                        if (viewModel.usernameEmpty || viewModel.passwordEmpty || viewModel.repeatEmpty || viewModel.repeatBad) {
                             Spacer(Modifier.height(12.dp))
                             Text(
                                 text = when {
-                                    usernameEmpty -> "Username is required"
-                                    passwordEmpty -> "Password is required"
-                                    repeatEmpty -> "Please repeat password"
-                                    repeatBad -> "Passwords do not match"
+                                    viewModel.usernameEmpty -> "Username is required"
+                                    viewModel.passwordEmpty -> "Password is required"
+                                    viewModel.repeatEmpty -> "Please repeat password"
+                                    viewModel.repeatBad -> "Passwords do not match"
                                     else -> ""
                                 },
                                 color = MaterialTheme.colorScheme.error,
