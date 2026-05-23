@@ -1,7 +1,5 @@
 package com.kadawatcha.app.ui
 
-import android.graphics.Color
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,7 +7,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -19,8 +24,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun NewAccountScreen(
@@ -31,131 +38,162 @@ fun NewAccountScreen(
     var usernameEmpty by rememberSaveable { mutableStateOf(false) }
     var usernameAlreadyTaken by rememberSaveable { mutableStateOf(false) }
 
-
     var password by rememberSaveable { mutableStateOf("") }
     var passwordError by rememberSaveable { mutableStateOf(false) }
     var passwordEmpty by rememberSaveable { mutableStateOf(false) }
-    var passwordShort by rememberSaveable {mutableStateOf(false) }
 
     var repeatPassword by rememberSaveable { mutableStateOf("") }
     var repeatEmpty by rememberSaveable { mutableStateOf(false) }
     var repeatBad by rememberSaveable { mutableStateOf(false) }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            PageTitle(text = "FakeGrook\nCreate account")
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.Center),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Join Us",
+                    fontSize = 40.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = MaterialTheme.colorScheme.primary,
+                    letterSpacing = (-1).sp
+                )
 
-            Spacer(Modifier.height(25.dp))
+                Text(
+                    text = "Create your account",
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.secondary
+                )
 
-            CustomInput(
-                value = username,
-                onValueChange = { 
-                    username = it
-                    usernameEmpty = false
-                    usernameError = false
-                },
-                label = "Username",
-                isError = usernameEmpty || usernameError || usernameAlreadyTaken
-            )
+                Spacer(Modifier.height(32.dp))
 
-            Spacer(Modifier.height(20.dp))
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(0.9f),
+                    shape = RoundedCornerShape(24.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(24.dp)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        CustomInput(
+                            value = username,
+                            onValueChange = {
+                                username = it
+                                usernameEmpty = false
+                                usernameError = false
+                            },
+                            label = "Username",
+                            leadingIcon = Icons.Default.Person,
+                            isError = usernameEmpty || usernameError || usernameAlreadyTaken
+                        )
 
-            CustomInput(
-                value = password,
-                onValueChange = { 
-                    password = it
-                    passwordEmpty = false
-                    passwordError = false
-                },
-                label = "Password",
-                visualTransformation = PasswordVisualTransformation(),
-                isError = passwordEmpty || passwordError || (password.isNotEmpty() && password.length < 8),
-                supportingText = if (password.isNotEmpty() && password.length < 8) {
-                    {
-                        Text(text = "Too short",
-                            color =  androidx.compose.ui.graphics.Color.LightGray)
-                    }
-                } else null
-            )
+                        Spacer(Modifier.height(16.dp))
 
-            Spacer(Modifier.height(20.dp))
+                        CustomInput(
+                            value = password,
+                            onValueChange = {
+                                password = it
+                                passwordEmpty = false
+                                passwordError = false
+                            },
+                            label = "Password",
+                            leadingIcon = Icons.Default.Lock,
+                            visualTransformation = PasswordVisualTransformation(),
+                            isError = passwordEmpty || passwordError || (password.isNotEmpty() && password.length < 8),
+                            supportingText = if (password.isNotEmpty() && password.length < 8) {
+                                { Text(text = "Must be 8+ characters") }
+                            } else null
+                        )
 
-            CustomInput(
-                value = repeatPassword,
-                onValueChange = { 
-                    repeatPassword = it
-                    repeatEmpty = false
-                    repeatBad = false
-                },
-                label = "Repeat Password",
-                visualTransformation = PasswordVisualTransformation(),
-                isError = repeatEmpty || repeatBad
-            )
+                        Spacer(Modifier.height(16.dp))
 
-            Spacer(Modifier.height(24.dp))
+                        CustomInput(
+                            value = repeatPassword,
+                            onValueChange = {
+                                repeatPassword = it
+                                repeatEmpty = false
+                                repeatBad = false
+                            },
+                            label = "Repeat Password",
+                            leadingIcon = Icons.Default.Lock,
+                            visualTransformation = PasswordVisualTransformation(),
+                            isError = repeatEmpty || repeatBad
+                        )
 
-            Button(
-                modifier = Modifier.fillMaxWidth(0.8f),
-                onClick = {
-                    val trimmedUsername = username.trim()
-                    val trimmedPassword = password.trim()
-                    val trimmedRepeatPassword = repeatPassword.trim()
+                        Spacer(Modifier.height(24.dp))
 
-                    // Reset des erreurs
-                    usernameEmpty = false
-                    usernameError = false
-                    usernameAlreadyTaken = false
-                    passwordError = false
-                    passwordEmpty = false
-                    repeatEmpty = false
-                    repeatBad = false
+                        Button(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(56.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            onClick = {
+                                val trimmedUsername = username.trim()
+                                val trimmedPassword = password.trim()
+                                val trimmedRepeatPassword = repeatPassword.trim()
 
-                    when {
-                        trimmedUsername.isEmpty() -> usernameEmpty = true
-                        trimmedPassword.isEmpty() -> passwordEmpty = true
-                        trimmedPassword.length < 8 -> {
-                            // nada couleur et txt auto
+                                usernameEmpty = false
+                                usernameError = false
+                                usernameAlreadyTaken = false
+                                passwordError = false
+                                passwordEmpty = false
+                                repeatEmpty = false
+                                repeatBad = false
+
+                                when {
+                                    trimmedUsername.isEmpty() -> usernameEmpty = true
+                                    trimmedPassword.isEmpty() -> passwordEmpty = true
+                                    trimmedPassword.length < 8 -> {}
+                                    trimmedRepeatPassword.isEmpty() -> repeatEmpty = true
+                                    trimmedPassword != trimmedRepeatPassword -> repeatBad = true
+                                    else -> {
+                                        // Succès !
+                                    }
+                                }
+                            }
+                        ) {
+                            Text("Create Account", fontWeight = FontWeight.Bold, fontSize = 18.sp)
                         }
-                        trimmedRepeatPassword.isEmpty() -> repeatEmpty = true
-                        trimmedPassword != trimmedRepeatPassword -> repeatBad = true
-                        else -> {
-                            // Ici, tout est bon !
-                            // Logique de création de compte
+
+                        if (usernameEmpty || passwordEmpty || repeatEmpty || repeatBad) {
+                            Spacer(Modifier.height(12.dp))
+                            Text(
+                                text = when {
+                                    usernameEmpty -> "Username is required"
+                                    passwordEmpty -> "Password is required"
+                                    repeatEmpty -> "Please repeat password"
+                                    repeatBad -> "Passwords do not match"
+                                    else -> ""
+                                },
+                                color = MaterialTheme.colorScheme.error,
+                                fontSize = 14.sp
+                            )
                         }
                     }
                 }
+            }
+
+            TextButton(
+                onClick = onBackToLogin,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 32.dp)
             ) {
-                Text("Create account")
+                Text(
+                    "Already have an account ? Sign In",
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.SemiBold
+                )
             }
-
-            Spacer(Modifier.height(16.dp))
-
-            // Affichage des messages d'erreurs
-            if (usernameEmpty) {
-                Text("Please enter a username", color = androidx.compose.ui.graphics.Color.Red)
-            } else if (passwordEmpty) {
-                Text("Please enter a password", color = androidx.compose.ui.graphics.Color.Red)
-            } else if (repeatEmpty) {
-                Text("Please repeat your password", color = androidx.compose.ui.graphics.Color.Red)
-            } else if (repeatBad) {
-                Text("Passwords do not match", color = androidx.compose.ui.graphics.Color.Red)
-            }
-        }
-
-        TextButton(
-            onClick = onBackToLogin,
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(16.dp)
-        ) {
-            Text("<- Back to login")
         }
     }
 }
