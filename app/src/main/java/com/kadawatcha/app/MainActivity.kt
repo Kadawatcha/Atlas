@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
                     NavHost(
                         navController = navController,
                         startDestination = "login", // Écran de départ
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.fillMaxSize().padding(innerPadding)
                     ) {
                         composable("login") { // Route login
                             PasswordScreen(
