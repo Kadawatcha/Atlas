@@ -27,7 +27,8 @@ fun PageTitle(
     fontSize: TextUnit = 40.sp,
     fontWeight: FontWeight = FontWeight.ExtraBold,
     color: Color = MaterialTheme.colorScheme.primary,
-    letterSpacing: TextUnit = (-1).sp
+    letterSpacing: TextUnit = (-1).sp,
+    textAlign: TextAlign = TextAlign.Center
 ) {
     Text(
         text = text,
@@ -35,7 +36,7 @@ fun PageTitle(
         fontWeight = fontWeight,
         color = color,
         letterSpacing = letterSpacing,
-        textAlign = TextAlign.Center,
+        textAlign = textAlign,
         modifier = modifier.fillMaxWidth()
     )
 }
