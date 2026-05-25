@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.kadawatcha.app.ui.LoginScreen
+import com.kadawatcha.app.ui.MainScreen
 import com.kadawatcha.app.ui.NewAccountScreen
 import com.kadawatcha.app.ui.theme.AppTheme
 
@@ -43,6 +44,10 @@ class MainActivity : ComponentActivity() {
                                     navController.popBackStack()
                                 }
                             )
+                        }
+                        composable("mainpage"){
+                            MainScreen()
+                            // todo ?
                         }
                     }
                 }
