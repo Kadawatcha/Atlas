@@ -33,8 +33,13 @@ import com.kadawatcha.app.viewmodel.LoginViewModel
 fun LoginScreen(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = viewModel(),
+    onLoginSuccess: () -> Unit,
     onNavigateToCreateAccount: () -> Unit,
 ) {
+    // On observe le signal de succès
+    if (viewModel.loginSuccess) {
+        onLoginSuccess()
+    }
 
     // Utilisation d'une Surface pour un fond doux
     Surface(

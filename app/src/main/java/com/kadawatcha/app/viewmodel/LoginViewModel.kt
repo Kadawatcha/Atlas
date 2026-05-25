@@ -14,6 +14,7 @@ class LoginViewModel : ViewModel() {
     var emptyUser by mutableStateOf(false)
     var passwordError by mutableStateOf(false)
     var emptyPassword by mutableStateOf(false)
+    var loginSuccess by mutableStateOf(false)
 
     // La logique (le cerveau)
     fun onLoginClick() {
@@ -33,7 +34,7 @@ class LoginViewModel : ViewModel() {
                 if (trimmedPassword != "Pass2") {
                     passwordError = true
                 } else {
-                    // Succès ! On pourrait changer d'écran ici
+                   loginSuccess = true
                 }
             }
 

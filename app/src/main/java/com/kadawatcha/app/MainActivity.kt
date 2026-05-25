@@ -33,6 +33,12 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable("login") {
                             LoginScreen(
+                                onLoginSuccess = {
+                                    navController.navigate("mainpage") {
+                                        // On vide la pile pour ne pas pouvoir revenir au login avec "Retour"
+                                        popUpTo("login") { inclusive = true }
+                                    }
+                                },
                                 onNavigateToCreateAccount = {
                                     navController.navigate("create_account")
                                 }
@@ -45,9 +51,8 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
-                        composable("mainpage"){
+                        composable("mainpage") {
                             MainScreen()
-                            // todo ?
                         }
                     }
                 }
