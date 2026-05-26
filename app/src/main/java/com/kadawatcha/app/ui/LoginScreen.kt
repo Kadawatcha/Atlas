@@ -21,6 +21,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.AutofillType
+import androidx.compose.ui.autofill.ContentType
+import androidx.compose.ui.semantics.contentType
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -87,6 +91,9 @@ fun LoginScreen(
                                 viewModel.emptyUser = false
                             },
                             label = "Username",
+                            modifier = Modifier.semantics {
+                                contentType = ContentType.Username
+                            },
                             leadingIcon = Icons.Default.Person,
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                             isError = viewModel.usernameError || viewModel.emptyUser
@@ -102,10 +109,13 @@ fun LoginScreen(
                                 viewModel.emptyPassword = false
                             },
                             label = "Password",
+                            modifier = Modifier.semantics{
+                                contentType = ContentType.Password
+                            },
                             leadingIcon = Icons.Default.Lock,
                             visualTransformation = PasswordVisualTransformation(),
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                            isError = viewModel.passwordError || viewModel.emptyPassword
+                            isError = viewModel.passwordError || viewModel.emptyPassword,
                         )
 
                         Spacer(Modifier.height(24.dp))
