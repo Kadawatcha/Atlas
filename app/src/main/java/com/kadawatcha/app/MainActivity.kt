@@ -2,6 +2,7 @@ package com.kadawatcha.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,20 +35,27 @@ class MainActivity : ComponentActivity() {
                         composable("login") {
                             LoginScreen(
                                 onLoginSuccess = {
+                                    // Utilisation de popUpTo pour vider la pile et éviter les doubles navigations
                                     navController.navigate("mainpage") {
-                                        // On vide la pile pour ne pas pouvoir revenir au login avec "Retour"
                                         popUpTo("login") { inclusive = true }
+                                        launchSingleTop = true
                                     }
                                 },
                                 onNavigateToCreateAccount = {
-                                    navController.navigate("create_account")
+                                    // launchSingleTop évite d'empiler plusieurs fois la même page si on clique vite
+                                    navController.navigate("create_account") {
+                                        launchSingleTop = true
+                                    }
                                 }
                             )
                         }
                         composable("create_account") {
                             NewAccountScreen(
                                 onBackToLogin = {
-                                    navController.popBackStack()
+                                    // popBackStack est sûr, mais on peut vérifier s'il y a quelque chose à dépiler
+                                    if (navController.previousBackStackEntry != null) {
+                                        navController.popBackStack()
+                                    }
                                 }
                             )
                         }

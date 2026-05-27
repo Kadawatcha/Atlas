@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -19,9 +20,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.semantics
@@ -40,9 +41,11 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onNavigateToCreateAccount: () -> Unit,
 ) {
-    // On observe le signal de succès
-    if (viewModel.loginSuccess) {
-        onLoginSuccess()
+    // On observe le signal de succès avec un LaunchedEffect pour éviter les navigations multiples pendant la composition
+    LaunchedEffect(viewModel.loginSuccess) {
+        if (viewModel.loginSuccess) {
+            onLoginSuccess()
+        }
     }
 
     // Utilisation d'une Surface pour un fond doux
@@ -156,7 +159,8 @@ fun LoginScreen(
                 onClick = onNavigateToCreateAccount,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 32.dp)
+                    .navigationBarsPadding()
+                    .padding(bottom = 16.dp)
             ) {
                 Text(
                     "Don't have an account ? Sign Up",
