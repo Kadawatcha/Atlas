@@ -3,6 +3,7 @@ package com.kadawatcha.app.ui
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,7 +42,8 @@ fun MainScreen(
     modifier: Modifier = Modifier, viewModel: MainViewModel = viewModel()
 ) {
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             TopAppBar(
                 title = {
@@ -95,7 +97,7 @@ fun MainScreen(
     ) { innerPadding ->
 
         Surface( // obligé en dessous des btns sinon ça cacherai
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
             color = MaterialTheme.colorScheme.background
