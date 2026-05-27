@@ -68,7 +68,9 @@ fun MainScreen(
 
 
         bottomBar = {
-            NavigationBar {
+            NavigationBar(
+                windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 10.dp)
+            ) {
                 NavigationBarItem(
                     selected = true,
                     onClick = { /* TODO: Navigate to Home */ },
