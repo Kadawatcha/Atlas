@@ -68,7 +68,6 @@ fun MainScreen(
 
         bottomBar = {
             NavigationBar(
-                containerColor = MaterialTheme.colorScheme.inversePrimary,
                 windowInsets = NavigationBarDefaults.windowInsets,
             ) {
 
