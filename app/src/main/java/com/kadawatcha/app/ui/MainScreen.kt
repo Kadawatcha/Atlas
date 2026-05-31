@@ -120,7 +120,7 @@ fun MainScreen(
 
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        text = "Welcome to Kad's app",
+                        text = "Welcome to Kad's app ",
                         color = MaterialTheme.colorScheme.secondary,
                         textAlign = TextAlign.Start
                     )

@@ -1,11 +1,14 @@
 package com.kadawatcha.app.ui
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -48,18 +51,21 @@ fun NewAccountScreen(
         color = MaterialTheme.colorScheme.background
     ) {
         Box(modifier = Modifier.fillMaxSize().imePadding()) {
-            // Zone scrollable pour le contenu
-            Column(
+            // Zone scrollable pour le contenu (Titre + Champs) centrée
+            BoxWithConstraints(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.TopCenter)
-                    .verticalScroll(scrollState)
-                    .padding(bottom = 140.dp), // Pour laisser de la place aux boutons fixes
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxSize()
+                    .padding(bottom = 100.dp) // Espace pour ne pas chevaucher les boutons fixes
             ) {
-                Spacer(Modifier.height(64.dp))
-                
-                PageTitle(text = "Join Us")
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = maxHeight)
+                        .verticalScroll(scrollState),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    PageTitle(text = "Join Us")
 
                 Text(
                     text = "Create your account",
@@ -144,9 +150,24 @@ fun NewAccountScreen(
                                 fontSize = 14.sp
                             )
                         }
+                        Spacer(Modifier.height(16.dp))
+
+                        Button(
+                            onClick = { viewModel.onCreateAccountClick() },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(56.dp),
+                            shape = RoundedCornerShape(16.dp)
+                        ) {
+                            Text("Create Account", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                        }
+
+
+
                     }
                 }
             }
+        }
 
             // Zone fixe en bas pour les boutons d'action
             Column(
@@ -157,17 +178,6 @@ fun NewAccountScreen(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Button(
-                    onClick = { viewModel.onCreateAccountClick() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(16.dp)
-                ) {
-                    Text("Create Account", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                }
-
-                Spacer(Modifier.height(8.dp))
 
                 TextButton(onClick = onBackToLogin) {
                     Text(
