@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
@@ -40,22 +40,25 @@ fun NewAccountScreen(
     viewModel: NewAccountViewModel = viewModel(),
     onBackToLogin: () -> Unit,
 ) {
-
     val scrollState = rememberScrollState()
+
 
     Surface(
         modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         Box(modifier = Modifier.fillMaxSize().imePadding()) {
-
+            // Zone scrollable pour le contenu
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .align(Alignment.Center)
-                    .verticalScroll(scrollState),
+                    .align(Alignment.TopCenter)
+                    .verticalScroll(scrollState)
+                    .padding(bottom = 140.dp), // Pour laisser de la place aux boutons fixes
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Spacer(Modifier.height(64.dp))
+                
                 PageTitle(text = "Join Us")
 
                 Text(
@@ -77,10 +80,9 @@ fun NewAccountScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         CustomInput(
-                            modifier = Modifier
-                                .semantics{
-                                    contentType = ContentType.Username
-                                },
+                            modifier = Modifier.semantics {
+                                contentType = ContentType.Username
+                            },
                             value = viewModel.username,
                             onValueChange = {
                                 viewModel.username = it
@@ -90,13 +92,12 @@ fun NewAccountScreen(
                             label = "Username",
                             leadingIcon = Icons.Default.Person,
                             isError = viewModel.usernameEmpty || viewModel.usernameError || viewModel.usernameAlreadyTaken
-                            
                         )
 
                         Spacer(Modifier.height(16.dp))
 
                         CustomInput(
-                            modifier =Modifier.semantics { contentType = ContentType.NewPassword},
+                            modifier = Modifier.semantics { contentType = ContentType.NewPassword },
                             value = viewModel.password,
                             onValueChange = {
                                 viewModel.password = it
@@ -128,20 +129,7 @@ fun NewAccountScreen(
                             isError = viewModel.repeatEmpty || viewModel.repeatBad
                         )
 
-                        Spacer(Modifier.height(24.dp))
-
-                        Button(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(56.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            onClick = {
-                                viewModel.onCreateAccountClick()
-                            },
-                        ) {
-                            Text("Create Account", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                        }
-
+                        // Messages d'erreurs
                         if (viewModel.usernameEmpty || viewModel.passwordEmpty || viewModel.repeatEmpty || viewModel.repeatBad) {
                             Spacer(Modifier.height(12.dp))
                             Text(
@@ -160,18 +148,34 @@ fun NewAccountScreen(
                 }
             }
 
-            TextButton(
-                onClick = onBackToLogin,
+            // Zone fixe en bas pour les boutons d'action
+            Column(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
                     .navigationBarsPadding()
-                    .padding(bottom = 16.dp)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    "Already have an account ? Sign In",
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.SemiBold
-                )
+                Button(
+                    onClick = { viewModel.onCreateAccountClick() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Text("Create Account", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                }
+
+                Spacer(Modifier.height(8.dp))
+
+                TextButton(onClick = onBackToLogin) {
+                    Text(
+                        "Already have an account ? Sign In",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
             }
         }
     }

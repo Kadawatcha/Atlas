@@ -44,33 +44,31 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onNavigateToCreateAccount: () -> Unit,
 ) {
-
     val scrollState = rememberScrollState()
-    // On observe le signal de succès avec un LaunchedEffect pour éviter les navigations multiples pendant la composition
+
     LaunchedEffect(viewModel.loginSuccess) {
         if (viewModel.loginSuccess) {
             onLoginSuccess()
         }
     }
 
-    // Utilisation d'une Surface pour un fond doux
     Surface(
         modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         Box(modifier = Modifier.fillMaxSize().imePadding()) {
-
+            // Zone scrollable pour le contenu (Titre + Champs)
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .align(Alignment.Center)
-                    .verticalScroll(scrollState),
+                    .align(Alignment.TopCenter)
+                    .verticalScroll(scrollState)
+                    .padding(bottom = 140.dp), // Padding pour ne pas chevaucher les boutons fixes
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Titre plus moderne
-                PageTitle(
-                    text = "Atlas",
-                )
+                Spacer(Modifier.height(64.dp))
+                
+                PageTitle(text = "Atlas")
 
                 Text(
                     text = "Welcome back!",
@@ -80,10 +78,8 @@ fun LoginScreen(
 
                 Spacer(Modifier.height(32.dp))
 
-                // Carte pour regrouper les champs
                 ElevatedCard(
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f),
+                    modifier = Modifier.fillMaxWidth(0.9f),
                     shape = RoundedCornerShape(24.dp)
                 ) {
                     Column(
@@ -118,7 +114,7 @@ fun LoginScreen(
                                 viewModel.emptyPassword = false
                             },
                             label = "Password",
-                            modifier = Modifier.semantics{
+                            modifier = Modifier.semantics {
                                 contentType = ContentType.Password
                             },
                             leadingIcon = Icons.Default.Lock,
@@ -127,21 +123,7 @@ fun LoginScreen(
                             isError = viewModel.passwordError || viewModel.emptyPassword,
                         )
 
-                        Spacer(Modifier.height(24.dp))
-
-                        Button(
-                            onClick = {
-                                viewModel.onLoginClick()
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(56.dp),
-                            shape = RoundedCornerShape(16.dp)
-                        ) {
-                            Text("Sign In", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                        }
-
-                        // Messages d'erreurs intégrés plus proprement
+                        // Messages d'erreurs
                         if (viewModel.emptyUser || viewModel.emptyPassword || viewModel.usernameError || viewModel.passwordError) {
                             Spacer(Modifier.height(12.dp))
                             Text(
@@ -160,19 +142,34 @@ fun LoginScreen(
                 }
             }
 
-            // Bouton de navigation discret en bas
-            TextButton(
-                onClick = onNavigateToCreateAccount,
+            // Zone fixe en bas pour les boutons d'action
+            Column(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
                     .navigationBarsPadding()
-                    .padding(bottom = 16.dp)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    "Don't have an account ? Sign Up",
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.SemiBold
-                )
+                Button(
+                    onClick = { viewModel.onLoginClick() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Text("Sign In", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                }
+
+                Spacer(Modifier.height(8.dp))
+
+                TextButton(onClick = onNavigateToCreateAccount) {
+                    Text(
+                        "Don't have an account ? Sign Up",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
             }
         }
     }
