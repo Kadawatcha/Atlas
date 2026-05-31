@@ -22,6 +22,7 @@ class NewAccountViewModel: ViewModel() {
     var repeatPassword by mutableStateOf("")
     var repeatEmpty by mutableStateOf(false)
     var repeatBad by mutableStateOf(false)
+    var creationSuccess by mutableStateOf(false)
 
     fun onCreateAccountClick() {
         val trimmedUsername = username.trim()
@@ -58,6 +59,7 @@ class NewAccountViewModel: ViewModel() {
             .add(newUser)
             .addOnSuccessListener { documentReference ->
                 println("Bienvenue $username chez Atlas !\nVous pouvez vous connecter !")
+                creationSuccess = true
                 username = ""
                 password = ""
                 repeatPassword = ""

@@ -38,7 +38,9 @@ import com.kadawatcha.app.viewmodel.MainViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    modifier: Modifier = Modifier, viewModel: MainViewModel = viewModel()
+    username : String,
+    modifier: Modifier = Modifier,
+    viewModel: MainViewModel = viewModel()
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -120,7 +122,7 @@ fun MainScreen(
 
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        text = "Welcome to Kad's app ",
+                        text = "Welcome to Kad's app $username ",
                         color = MaterialTheme.colorScheme.secondary,
                         textAlign = TextAlign.Start
                     )

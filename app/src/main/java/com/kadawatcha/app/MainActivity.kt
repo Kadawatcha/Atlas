@@ -2,7 +2,6 @@ package com.kadawatcha.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,13 +28,13 @@ class MainActivity : ComponentActivity() {
                 ) {
                     composable("login") {
                         LoginScreen(
-                            onLoginSuccess = {
-                                // Utilisation de popUpTo pour vider la pile et éviter les doubles navigations
-                                navController.navigate("mainpage") {
-                                    popUpTo("login") { inclusive = true }
+                            onLoginSuccess = { loggedInUsername ->
+                                navController.navigate("mainpage/$loggedInUsername"){
+                                    popUpTo("login") {inclusive = true}
                                     launchSingleTop = true
                                 }
                             },
+                            
                             onNavigateToCreateAccount = {
                                 // launchSingleTop évite d'empiler plusieurs fois la même page si on clique vite
                                 navController.navigate("create_account") {
@@ -46,16 +45,19 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("create_account") {
                         NewAccountScreen(
+                            onAccountCreated = {
+                                navController.popBackStack("login", inclusive = false)
+                            },
                             onBackToLogin = {
-                                // popBackStack est sûr, mais on peut vérifier s'il y a quelque chose à dépiler
                                 if (navController.previousBackStackEntry != null) {
                                     navController.popBackStack()
                                 }
                             }
                         )
                     }
-                    composable("mainpage") {
-                        MainScreen()
+                    composable("mainpage/{username}") { backStackEntry ->
+                        val username = backStackEntry.arguments?.getString("username") ?: ""
+                        MainScreen(username = username)
                     }
                 }
             }

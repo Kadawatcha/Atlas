@@ -25,6 +25,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
@@ -41,9 +42,16 @@ import com.kadawatcha.app.viewmodel.NewAccountViewModel
 fun NewAccountScreen(
     modifier: Modifier = Modifier,
     viewModel: NewAccountViewModel = viewModel(),
+    onAccountCreated: () -> Unit,
     onBackToLogin: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
+
+    LaunchedEffect(viewModel.creationSuccess) {
+        if (viewModel.creationSuccess) {
+            onAccountCreated()
+        }
+    }
 
 
     Surface(

@@ -44,14 +44,14 @@ import com.kadawatcha.app.viewmodel.LoginViewModel
 fun LoginScreen(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = viewModel(),
-    onLoginSuccess: () -> Unit,
+    onLoginSuccess: (String) -> Unit,
     onNavigateToCreateAccount: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
 
     LaunchedEffect(viewModel.loginSuccess) {
         if (viewModel.loginSuccess) {
-            onLoginSuccess()
+            onLoginSuccess(viewModel.username)
         }
     }
 
