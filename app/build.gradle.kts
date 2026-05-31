@@ -15,7 +15,7 @@ android {
         applicationId = "com.kadawatcha.app"
         minSdk = 26
         versionCode = 3
-        versionName = "1.5.1"
+        versionName = "1.5.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
