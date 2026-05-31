@@ -6,10 +6,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
@@ -41,6 +44,8 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onNavigateToCreateAccount: () -> Unit,
 ) {
+
+    val scrollState = rememberScrollState()
     // On observe le signal de succès avec un LaunchedEffect pour éviter les navigations multiples pendant la composition
     LaunchedEffect(viewModel.loginSuccess) {
         if (viewModel.loginSuccess) {
@@ -53,12 +58,13 @@ fun LoginScreen(
         modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxSize().imePadding()) {
 
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .align(Alignment.Center),
+                    .align(Alignment.Center)
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Titre plus moderne

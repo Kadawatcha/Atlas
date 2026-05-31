@@ -15,8 +15,8 @@ android {
     defaultConfig {
         applicationId = "com.kadawatcha.app"
         minSdk = 26
-        versionCode = 3
-        versionName = "1.6.1"
+        versionCode = 4
+        versionName = "1.6.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
