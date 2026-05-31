@@ -1,11 +1,15 @@
 package com.kadawatcha.app.ui
 
+import android.R
+import android.graphics.drawable.Icon
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -41,6 +45,25 @@ fun PageTitle(
     )
 }
 
+@Composable
+fun RowScope.CustomNavItem( // Restricted to horizontal layouts (Row or NavigationBar)
+    selected: Boolean,
+    icon: ImageVector,
+    contentDescription: String,
+    onClick: () -> Unit
+) {
+    NavigationBarItem(
+        selected = selected,
+        onClick = onClick,
+        icon = {
+            Icon(
+                imageVector = icon,
+                contentDescription = contentDescription,
+                modifier = Modifier.size(20.dp) // Centralisé ! Si tu changes ici, ça change partout
+            )
+        }
+    )
+}
 @Composable
 fun CustomInput(
     value: String,
