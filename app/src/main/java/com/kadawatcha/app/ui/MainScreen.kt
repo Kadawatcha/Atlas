@@ -46,7 +46,7 @@ fun MainScreen(
             TopAppBar(
                 title = {
                     PageTitle(
-                        text = "FaceGrook",
+                        text = "Atlas",
                         textAlign = TextAlign.Start,
                         fontSize = 30.sp
                     )

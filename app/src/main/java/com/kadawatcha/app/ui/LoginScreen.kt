@@ -63,7 +63,7 @@ fun LoginScreen(
             ) {
                 // Titre plus moderne
                 PageTitle(
-                    text = "FaceGrook",
+                    text = "Atlas",
                 )
 
                 Text(
