@@ -18,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -66,7 +67,11 @@ fun MainScreen(
 
 
         bottomBar = {
-            NavigationBar() {
+            NavigationBar(
+                containerColor = MaterialTheme.colorScheme.inversePrimary,
+                windowInsets = NavigationBarDefaults.windowInsets,
+            ) {
+
                 CustomNavItem(
                     selected = true,
                     onClick = { /* TODO: Navigate to Home */ },
