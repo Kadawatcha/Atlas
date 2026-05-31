@@ -21,6 +21,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
+import androidx.compose.ui.semantics.contentType
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -68,6 +71,10 @@ fun NewAccountScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         CustomInput(
+                            modifier = Modifier
+                                .semantics{
+                                    contentType = ContentType.Username
+                                },
                             value = viewModel.username,
                             onValueChange = {
                                 viewModel.username = it
@@ -77,11 +84,13 @@ fun NewAccountScreen(
                             label = "Username",
                             leadingIcon = Icons.Default.Person,
                             isError = viewModel.usernameEmpty || viewModel.usernameError || viewModel.usernameAlreadyTaken
+                            
                         )
 
                         Spacer(Modifier.height(16.dp))
 
                         CustomInput(
+                            modifier =Modifier.semantics { contentType = ContentType.NewPassword},
                             value = viewModel.password,
                             onValueChange = {
                                 viewModel.password = it
@@ -100,6 +109,7 @@ fun NewAccountScreen(
                         Spacer(Modifier.height(16.dp))
 
                         CustomInput(
+                            modifier = Modifier.semantics { contentType = ContentType.NewPassword },
                             value = viewModel.repeatPassword,
                             onValueChange = {
                                 viewModel.repeatPassword = it
