@@ -3,7 +3,6 @@ package com.kadawatcha.app.ui
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,13 +13,11 @@ import androidx.compose.material.icons.filled.ChatBubbleOutline
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kadawatcha.app.viewmodel.MainViewModel
 
@@ -43,13 +41,13 @@ fun MainScreen(
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             TopAppBar(
                 title = {
                     PageTitle(
                         text = "FaceGrook",
-                        textAlign = TextAlign.Start
+                        textAlign = TextAlign.Start,
+                        fontSize = 30.sp
                     )
                 },
                 actions = {
@@ -68,29 +66,33 @@ fun MainScreen(
 
 
         bottomBar = {
-            NavigationBar(
-                windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 10.dp)
-            ) {
-                NavigationBarItem(
+            NavigationBar() {
+                CustomNavItem(
                     selected = true,
                     onClick = { /* TODO: Navigate to Home */ },
-                    icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-                    label = { Text("Home") })
-                NavigationBarItem(
+                    icon = Icons.Default.Home,
+                    contentDescription = "home"
+                )
+
+                CustomNavItem(
                     selected = false,
                     onClick = {},
-                    icon = { Icon(Icons.Default.ChatBubbleOutline, contentDescription = "Chat") },
-                    label = { Text("Chat") })
-                NavigationBarItem(
+                    icon = Icons.Default.ChatBubbleOutline,
+                    contentDescription = "chat"
+                )
+
+                CustomNavItem(
                     selected = false,
                     onClick = {},
-                    icon = { Icon(Icons.Default.LocalFireDepartment, contentDescription = null) },
-                    label = { Text("Friends") })
-                NavigationBarItem(
+                    icon = Icons.Default.LocalFireDepartment,
+                    contentDescription = "friends"
+                )
+                CustomNavItem(
                     selected = false,
                     onClick = { /* TODO: Navigate to Profile */ },
-                    icon = { Icon(Icons.Default.AccountCircle, contentDescription = "Profile") },
-                    label = { Text("Profile") })
+                    icon = Icons.Default.AccountCircle,
+                    contentDescription = "profile"
+                )
 
             }
         }
@@ -112,7 +114,7 @@ fun MainScreen(
             ) {
                 Spacer(Modifier.height(8.dp))
 
-                Box(modifier = Modifier.fillMaxWidth()){
+                Box(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = "Welcome to Kad's app",
                         color = MaterialTheme.colorScheme.secondary,
@@ -121,8 +123,6 @@ fun MainScreen(
 
                 }
 
-
-                // Ici tu pourras ajouter la suite de ton contenu...
             }
         }
     }
