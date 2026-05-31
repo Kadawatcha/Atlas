@@ -4,8 +4,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
+import com.kadawatcha.app.model.User
 
 class NewAccountViewModel: ViewModel() {
+    private val db = Firebase.firestore
     var username by mutableStateOf("")
     var usernameError by mutableStateOf(false)
     var usernameEmpty by mutableStateOf(false)
@@ -39,9 +43,28 @@ class NewAccountViewModel: ViewModel() {
             trimmedRepeatPassword.isEmpty() -> repeatEmpty = true
             trimmedPassword != trimmedRepeatPassword -> repeatBad = true
             else -> {
-                // Succès !
+                createAccount()
             }
         }
+    }
+
+    fun createAccount(){
+
+        val newUser = User(
+            username = username,
+            password = password
+        )
+        db.collection("users")
+            .add(newUser)
+            .addOnSuccessListener { documentReference ->
+                println("Bienvenue $username chez Atlas !\nVous pouvez vous connecter !")
+                username = ""
+                password = ""
+                repeatPassword = ""
+            }
+            .addOnFailureListener { e ->
+                println("🚨 Aïe, erreur : $e")
+            }
     }
 
 }
