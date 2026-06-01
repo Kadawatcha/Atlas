@@ -57,7 +57,14 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("mainpage/{username}") { backStackEntry ->
                         val username = backStackEntry.arguments?.getString("username") ?: ""
-                        MainScreen(username = username)
+                        MainScreen(
+                            username = username,
+                            onLogout = {
+                                navController.navigate("login") {
+                                    popUpTo(0) { inclusive = true }
+                                }
+                            }
+                        )
                     }
                 }
             }
