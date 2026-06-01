@@ -8,16 +8,20 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.kadawatcha.app.model.User
 
-class NewAccountViewModel: ViewModel() {
+class NewAccountViewModel : ViewModel() {
     private val db = Firebase.firestore
     var username by mutableStateOf("")
     var usernameError by mutableStateOf(false)
     var usernameEmpty by mutableStateOf(false)
+
+    var usernameHadSpace by mutableStateOf(false)
     var usernameAlreadyTaken by mutableStateOf(false)
 
     var password by mutableStateOf("")
     var passwordError by mutableStateOf(false)
     var passwordEmpty by mutableStateOf(false)
+
+    var passwordHadSpace by mutableStateOf(false)
 
     var repeatPassword by mutableStateOf("")
     var repeatEmpty by mutableStateOf(false)
@@ -32,41 +36,47 @@ class NewAccountViewModel: ViewModel() {
         usernameEmpty = false
         usernameError = false
         usernameAlreadyTaken = false
+        usernameHadSpace = false
         passwordError = false
         passwordEmpty = false
+        passwordHadSpace = false
         repeatEmpty = false
         repeatBad = false
 
         when {
             trimmedUsername.isEmpty() -> usernameEmpty = true
+            trimmedUsername.contains(" ") -> usernameHadSpace = true
             trimmedPassword.isEmpty() -> passwordEmpty = true
+            trimmedPassword.contains(" ") -> passwordHadSpace = true
             trimmedPassword.length < 8 -> passwordError = true
             trimmedRepeatPassword.isEmpty() -> repeatEmpty = true
             trimmedPassword != trimmedRepeatPassword -> repeatBad = true
-            else -> {
-                createAccount()
-            }
+            else -> checkUsernameAndCreate(
+                trimmedUsername, trimmedPassword
+
+            )
         }
     }
 
-    fun createAccount(){
-
+    fun checkUsernameAndCreate(trimmedUsername: String, trimmedPassword: String) {
         val newUser = User(
-            username = username,
-            password = password
+            username = trimmedUsername, password = trimmedPassword
         )
-        db.collection("users")
-            .add(newUser)
-            .addOnSuccessListener { documentReference ->
-                println("Bienvenue $username chez Atlas !\nVous pouvez vous connecter !")
-                creationSuccess = true
-                username = ""
-                password = ""
-                repeatPassword = ""
-            }
-            .addOnFailureListener { e ->
-                println("🚨 Aïe, erreur : $e")
+
+        db.collection("users").whereEqualTo("username", trimmedUsername).get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    db.collection("users").add(newUser).addOnSuccessListener { _ ->
+                            creationSuccess = true
+                            username = ""
+                            password = ""
+                            repeatPassword = ""
+                        }
+                } else {
+                    usernameAlreadyTaken = true
+                }
+            }.addOnFailureListener { e ->
+                println("Error checking username: $e")
             }
     }
-
 }

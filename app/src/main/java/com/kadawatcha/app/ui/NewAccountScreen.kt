@@ -102,10 +102,11 @@ fun NewAccountScreen(
                                 viewModel.username = it
                                 viewModel.usernameEmpty = false
                                 viewModel.usernameError = false
+                                viewModel.usernameHadSpace = false
                             },
                             label = "Username",
                             leadingIcon = Icons.Default.Person,
-                            isError = viewModel.usernameEmpty || viewModel.usernameError || viewModel.usernameAlreadyTaken
+                            isError = viewModel.usernameEmpty || viewModel.usernameError || viewModel.usernameAlreadyTaken || viewModel.usernameHadSpace
                         )
 
                         Spacer(Modifier.height(16.dp))
@@ -117,11 +118,12 @@ fun NewAccountScreen(
                                 viewModel.password = it
                                 viewModel.passwordEmpty = false
                                 viewModel.passwordError = false
+                                viewModel.passwordHadSpace = false
                             },
                             label = "Password",
                             leadingIcon = Icons.Default.Lock,
                             visualTransformation = PasswordVisualTransformation(),
-                            isError = viewModel.passwordEmpty || viewModel.passwordError || (viewModel.password.isNotEmpty() && viewModel.password.length < 8),
+                            isError = viewModel.passwordEmpty || viewModel.passwordError || (viewModel.password.isNotEmpty() && viewModel.password.length < 8) || viewModel.passwordHadSpace,
                             supportingText = if (viewModel.password.isNotEmpty() && viewModel.password.length < 8) {
                                 { Text(text = "Must be 8+ characters") }
                             } else null
@@ -144,12 +146,15 @@ fun NewAccountScreen(
                         )
 
                         // Messages d'erreurs
-                        if (viewModel.usernameEmpty || viewModel.passwordEmpty || viewModel.repeatEmpty || viewModel.repeatBad) {
+                        if (viewModel.usernameEmpty || viewModel.passwordEmpty || viewModel.repeatEmpty || viewModel.repeatBad || viewModel.passwordHadSpace || viewModel.usernameHadSpace || viewModel.usernameAlreadyTaken) {
                             Spacer(Modifier.height(12.dp))
                             Text(
                                 text = when {
                                     viewModel.usernameEmpty -> "Username is required"
+                                    viewModel.usernameHadSpace -> "No spaces in username please"
+                                    viewModel.usernameAlreadyTaken -> "A user with this username is already taken"
                                     viewModel.passwordEmpty -> "Password is required"
+                                    viewModel.passwordHadSpace -> "No spaces in password please"
                                     viewModel.repeatEmpty -> "Please repeat password"
                                     viewModel.repeatBad -> "Passwords do not match"
                                     else -> ""
@@ -169,9 +174,6 @@ fun NewAccountScreen(
                         ) {
                             Text("Create Account", fontWeight = FontWeight.Bold, fontSize = 18.sp)
                         }
-
-
-
                     }
                 }
             }
