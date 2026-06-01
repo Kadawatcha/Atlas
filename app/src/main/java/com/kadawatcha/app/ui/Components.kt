@@ -1,7 +1,5 @@
 package com.kadawatcha.app.ui
 
-import android.R
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -64,6 +62,7 @@ fun RowScope.CustomNavItem( // Restricted to horizontal layouts (Row or Navigati
         }
     )
 }
+
 @Composable
 fun CustomInput(
     value: String,
