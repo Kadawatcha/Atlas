@@ -6,11 +6,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
-import com.kadawatcha.app.ui.MainScreen
 
 class LoginViewModel : ViewModel() {
 
     private val db = Firebase.firestore
+
     // Les états de l'écran (ce que la vue va afficher)
     var username by mutableStateOf("")
     var password by mutableStateOf("")
@@ -20,6 +20,7 @@ class LoginViewModel : ViewModel() {
     var passwordError by mutableStateOf(false)
     var emptyPassword by mutableStateOf(false)
     var loginSuccess by mutableStateOf(false)
+    var correctUser by mutableStateOf(false)
 
     // La logique (le cerveau)
     fun onLoginClick() {
@@ -29,35 +30,40 @@ class LoginViewModel : ViewModel() {
         // Reset des erreurs avant la tentative
         usernameError = false
         passwordError = false
+        correctUser = false
         loginSuccess = false
         emptyUser = trimmedUsername.isEmpty()
         emptyPassword = trimmedPassword.isEmpty()
 
-        if (emptyUser || emptyPassword) return
+        if (emptyUser || emptyPassword) return // mdp et password vide (2eme verif)
 
         db.collection("users")
             .whereEqualTo("username", trimmedUsername)
-            .whereEqualTo("password", trimmedPassword)
             .get()
-            .addOnSuccessListener { documents ->
-                // Si la liste des documents retournés n'est pas vide, c'est qu'on a trouvé le bon utilisateur !
-                if (!documents.isEmpty) {
-                    loginSuccess = true
-                    println("🔥 Connexion réussie pour $trimmedUsername !")
+            .addOnSuccessListener { document ->
 
-                    // On déclenche l'action de succès (par exemple, aller sur le MainScreen)
-                    // MainScreen()
-                } else {
-                    // Aucun utilisateur ne correspond à cette combinaison
+                if (document.isEmpty) { // pas d'utilisateur
                     loginSuccess = false
+                    correctUser = false
                     usernameError = true
-                    passwordError = true
-                    println("🚨 Identifiants incorrects...")
+
+                } else {
+                    val userDocument = document.documents[0]
+                    val realPassword = userDocument.getString("password")
+
+                    if (realPassword == trimmedPassword) {
+                        loginSuccess = true
+                    } else {
+                        correctUser = true
+                        passwordError = true
+                    }
+
                 }
+
             }
-            .addOnFailureListener { e ->
+            .addOnFailureListener {
                 loginSuccess = false
-                println("🚨 Erreur Firestore : $e")
+                // On sait jamais : \
             }
     }
 }
