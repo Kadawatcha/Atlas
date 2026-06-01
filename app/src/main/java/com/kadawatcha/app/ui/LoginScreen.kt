@@ -59,7 +59,9 @@ fun LoginScreen(
         modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        Box(modifier = Modifier.fillMaxSize().imePadding()) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .imePadding()) {
             // Zone scrollable pour le contenu (Titre + Champs) centrée
             BoxWithConstraints(
                 modifier = Modifier
@@ -76,91 +78,92 @@ fun LoginScreen(
                 ) {
                     PageTitle(text = "Atlas")
 
-                Text(
-                    text = "Welcome back!",
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.secondary
-                )
+                    Text(
+                        text = "Welcome back!",
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
 
-                Spacer(Modifier.height(32.dp))
+                    Spacer(Modifier.height(32.dp))
 
-                ElevatedCard(
-                    modifier = Modifier.fillMaxWidth(0.9f),
-                    shape = RoundedCornerShape(24.dp)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(24.dp)
-                            .fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    ElevatedCard(
+                        modifier = Modifier.fillMaxWidth(0.9f),
+                        shape = RoundedCornerShape(24.dp)
                     ) {
-                        CustomInput(
-                            value = viewModel.username,
-                            onValueChange = {
-                                viewModel.username = it
-                                viewModel.usernameError = false
-                                viewModel.emptyUser = false
-                            },
-                            label = "Username",
-                            modifier = Modifier.semantics {
-                                contentType = ContentType.Username
-                            },
-                            leadingIcon = Icons.Default.Person,
-                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                            isError = viewModel.usernameError || viewModel.emptyUser
-                        )
-
-                        Spacer(Modifier.height(16.dp))
-
-                        CustomInput(
-                            value = viewModel.password,
-                            onValueChange = {
-                                viewModel.password = it
-                                viewModel.passwordError = false
-                                viewModel.emptyPassword = false
-                            },
-                            label = "Password",
-                            modifier = Modifier.semantics {
-                                contentType = ContentType.Password
-                            },
-                            leadingIcon = Icons.Default.Lock,
-                            visualTransformation = PasswordVisualTransformation(),
-                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                            isError = viewModel.passwordError || viewModel.emptyPassword,
-                        )
-
-                        // Messages d'erreurs
-                        if (viewModel.emptyUser || viewModel.emptyPassword || viewModel.usernameError || viewModel.passwordError) {
-                            Spacer(Modifier.height(12.dp))
-                            Text(
-                                text = when {
-                                    viewModel.emptyUser -> "Username is required"
-                                    viewModel.emptyPassword -> "Password is required"
-                                    viewModel.usernameError -> "User not found"
-                                    viewModel.passwordError -> "Incorrect password"
-                                    else -> ""
-                                },
-                                color = MaterialTheme.colorScheme.error,
-                                fontSize = 14.sp
-                            )
-                        }
-                        
-                        Spacer(Modifier.height(16.dp))
-
-                        Button(
-                            onClick = { viewModel.onLoginClick() },
+                        Column(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .height(56.dp),
-                            shape = RoundedCornerShape(16.dp)
+                                .padding(24.dp)
+                                .fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text("Sign In", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                        }
+                            CustomInput(
+                                value = viewModel.username,
+                                onValueChange = {
+                                    viewModel.username = it
+                                    viewModel.usernameError = false
+                                    viewModel.emptyUser = false
+                                    viewModel.passwordError = false
+                                },
+                                label = "Username",
+                                modifier = Modifier.semantics {
+                                    contentType = ContentType.Username
+                                },
+                                leadingIcon = Icons.Default.Person,
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                                isError = viewModel.usernameError || viewModel.emptyUser
+                            )
 
+                            Spacer(Modifier.height(16.dp))
+
+                            CustomInput(
+                                value = viewModel.password,
+                                onValueChange = {
+                                    viewModel.password = it
+                                    viewModel.passwordError = false
+                                    viewModel.emptyPassword = false
+                                },
+                                label = "Password",
+                                modifier = Modifier.semantics {
+                                    contentType = ContentType.Password
+                                },
+                                leadingIcon = Icons.Default.Lock,
+                                visualTransformation = PasswordVisualTransformation(),
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                isError = viewModel.passwordError || viewModel.emptyPassword,
+                            )
+
+                            // Messages d'erreurs
+                            if (viewModel.emptyUser || viewModel.emptyPassword || viewModel.usernameError || viewModel.passwordError) {
+                                Spacer(Modifier.height(12.dp))
+                                Text(
+                                    text = when {
+                                        viewModel.emptyUser -> "Username is required"
+                                        viewModel.emptyPassword -> "Password is required"
+                                        viewModel.usernameError -> "User not found"
+                                        viewModel.passwordError -> "Incorrect password"
+                                        else -> ""
+                                    },
+                                    color = MaterialTheme.colorScheme.error,
+                                    fontSize = 14.sp
+                                )
+                            }
+
+                            Spacer(Modifier.height(16.dp))
+
+                            Button(
+                                onClick = { viewModel.onLoginClick() },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(56.dp),
+                                shape = RoundedCornerShape(16.dp)
+                            ) {
+                                Text("Sign In", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                            }
+
+                        }
                     }
                 }
             }
-        }
 
             // Zone fixe en bas pour les boutons d'action
             Column(
