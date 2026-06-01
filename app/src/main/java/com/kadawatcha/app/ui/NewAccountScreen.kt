@@ -1,5 +1,6 @@
 package com.kadawatcha.app.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -152,14 +153,19 @@ fun NewAccountScreen(
                                 text = when {
                                     viewModel.usernameEmpty -> "Username is required"
                                     viewModel.usernameHadSpace -> "No spaces in username please"
-                                    viewModel.usernameAlreadyTaken -> "A user with this username is already taken"
+                                    viewModel.usernameAlreadyTaken -> "User already exists, maybe go to login"
                                     viewModel.passwordEmpty -> "Password is required"
                                     viewModel.passwordHadSpace -> "No spaces in password please"
                                     viewModel.repeatEmpty -> "Please repeat password"
                                     viewModel.repeatBad -> "Passwords do not match"
                                     else -> ""
                                 },
-                                color = MaterialTheme.colorScheme.error,
+                                modifier = if (viewModel.usernameAlreadyTaken) {
+                                    Modifier.clickable { onBackToLogin() }
+                                } else {
+                                    Modifier
+                                },
+                                color = if (viewModel.usernameAlreadyTaken) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
                                 fontSize = 14.sp
                             )
                         }
