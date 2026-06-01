@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.ChatBubbleOutline
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocalFireDepartment
@@ -148,7 +148,7 @@ fun MainScreen(
 private fun MainTopMenu(onLogoutClick: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
-    Box{
+    Box {
         IconButton(onClick = { expanded = true }) {
             Icon(
                 imageVector = Icons.Default.Settings,
@@ -159,7 +159,7 @@ private fun MainTopMenu(onLogoutClick: () -> Unit) {
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(16.dp),
             // border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
         ) {
             DropdownMenuItem(
@@ -173,18 +173,19 @@ private fun MainTopMenu(onLogoutClick: () -> Unit) {
                 }
             )
 
-            HorizontalDivider()
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp))
 
             DropdownMenuItem(
-                text = { Text("Logout") },
+                text = { Text("Logout", color = MaterialTheme.colorScheme.error) },
                 onClick = {
                     expanded = false
                     onLogoutClick()
                 },
                 leadingIcon = {
                     Icon(
-                        imageVector = Icons.Default.ArrowBackIosNew,
-                        contentDescription = null
+                        imageVector = Icons.AutoMirrored.Filled.Logout,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.error
                     )
                 }
             )
