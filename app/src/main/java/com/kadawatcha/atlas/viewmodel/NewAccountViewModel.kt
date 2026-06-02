@@ -1,4 +1,4 @@
-package com.kadawatcha.app.viewmodel
+package com.kadawatcha.atlas.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
-import com.kadawatcha.app.model.User
+import com.kadawatcha.atlas.model.User
 
 class NewAccountViewModel : ViewModel() {
     private val db = Firebase.firestore

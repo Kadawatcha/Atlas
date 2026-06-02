@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.kadawatcha.app"
+    namespace = "com.kadawatcha.atlas"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -16,7 +16,7 @@ android {
         applicationId = "com.kadawatcha.app"
         minSdk = 26
         versionCode = 7
-        versionName = "1.7.0"
+        versionName = "1.7.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

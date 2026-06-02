@@ -1,4 +1,4 @@
-package com.kadawatcha.app.viewmodel
+package com.kadawatcha.atlas.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

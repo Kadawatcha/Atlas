@@ -1,4 +1,4 @@
-package com.kadawatcha.app
+package com.kadawatcha.atlas
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,10 +9,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.kadawatcha.app.ui.LoginScreen
-import com.kadawatcha.app.ui.MainScreen
-import com.kadawatcha.app.ui.NewAccountScreen
-import com.kadawatcha.app.ui.theme.AppTheme
+import com.kadawatcha.atlas.ui.LoginScreen
+import com.kadawatcha.atlas.ui.MainScreen
+import com.kadawatcha.atlas.ui.NewAccountScreen
+import com.kadawatcha.atlas.ui.theme.AppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

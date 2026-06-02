@@ -1,4 +1,4 @@
-package com.kadawatcha.app.ui
+package com.kadawatcha.atlas.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,7 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.kadawatcha.app.viewmodel.MainViewModel
+import com.kadawatcha.atlas.viewmodel.MainViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)

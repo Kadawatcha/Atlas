@@ -1,4 +1,4 @@
-package com.kadawatcha.app.ui
+package com.kadawatcha.atlas.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -37,7 +37,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.kadawatcha.app.viewmodel.NewAccountViewModel
+import com.kadawatcha.atlas.viewmodel.NewAccountViewModel
 
 @Composable
 fun NewAccountScreen(

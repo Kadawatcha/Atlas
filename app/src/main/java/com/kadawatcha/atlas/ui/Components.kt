@@ -1,4 +1,4 @@
-package com.kadawatcha.app.ui
+package com.kadawatcha.atlas.ui
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth

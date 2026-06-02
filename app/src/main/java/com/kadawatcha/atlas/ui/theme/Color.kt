@@ -1,4 +1,4 @@
-package com.kadawatcha.app.ui.theme
+package com.kadawatcha.atlas.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

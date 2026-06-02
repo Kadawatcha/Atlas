@@ -1,4 +1,4 @@
-package com.kadawatcha.app
+package com.kadawatcha.atlas
 
 import org.junit.Test
 

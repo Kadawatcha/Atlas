@@ -1,4 +1,4 @@
-package com.kadawatcha.app.model
+package com.kadawatcha.atlas.model
 
 
 data class User(
