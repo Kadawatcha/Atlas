@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.kadawatcha.atlas.model.User
+import com.kadawatcha.atlas.utils.SecurityUtils
 
 class NewAccountViewModel : ViewModel() {
     private val db = Firebase.firestore
@@ -59,8 +60,11 @@ class NewAccountViewModel : ViewModel() {
     }
 
     fun checkUsernameAndCreate(trimmedUsername: String, trimmedPassword: String) {
+
+        val hashedPassword = SecurityUtils.hashPassword(trimmedPassword)
         val newUser = User(
-            username = trimmedUsername, password = trimmedPassword
+            username = trimmedUsername,
+            password = hashedPassword
         )
 
         db.collection("users").whereEqualTo("username", trimmedUsername).get()

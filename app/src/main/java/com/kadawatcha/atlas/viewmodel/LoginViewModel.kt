@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import com.kadawatcha.atlas.utils.SecurityUtils
 
 class LoginViewModel : ViewModel() {
 
@@ -49,9 +50,11 @@ class LoginViewModel : ViewModel() {
 
                 } else {
                     val userDocument = document.documents[0]
-                    val realPassword = userDocument.getString("password")
 
-                    if (realPassword == trimmedPassword) {
+                    val realPassword = userDocument.getString("password")
+                    val hashedInputPassword = SecurityUtils.hashPassword(trimmedPassword)
+
+                    if (realPassword == hashedInputPassword) {
                         loginSuccess = true
                     } else {
                         correctUser = true
