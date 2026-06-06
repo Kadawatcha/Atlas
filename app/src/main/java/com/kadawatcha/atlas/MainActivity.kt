@@ -1,14 +1,22 @@
 package com.kadawatcha.atlas
 
 import android.os.Bundle
+import android.view.Surface
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
@@ -32,62 +40,72 @@ class MainActivity : ComponentActivity() {
                 // recup datas
                 val context = LocalContext.current
                 val sessionManager = remember { SessionManager(context) }
-                val loggedInUser by sessionManager.loggedInUser.collectAsState(null)
+                val loggedInUser by sessionManager.loggedInUser.collectAsState("LOADING")
 
-                // check si data
-                val startDest = if (loggedInUser != null) {
-                    "mainpage/$loggedInUser" // S'il y a un pseudo: main page
-                } else {
-                    "login"                  // Sinon on demande de se connecter
-                }
+                Surface(color = MaterialTheme.colorScheme.background) {
 
-                NavHost(
-                    navController = navController,
-                    startDestination = startDest,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    composable("login") {
-                        LoginScreen(
-                            onLoginSuccess = { loggedInUsername ->
-                                navController.navigate("mainpage/$loggedInUsername"){
-                                    popUpTo("login") {inclusive = true}
-                                    launchSingleTop = true
-                                }
-                            },
-                            
-                            onNavigateToCreateAccount = {
-                                // launchSingleTop évite d'empiler plusieurs fois la même page si on clique vite
-                                navController.navigate("create_account") {
-                                    launchSingleTop = true
-                                }
+                    if (loggedInUser == "LOADING") {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    } else {
+                        val startDest = if (loggedInUser != null) {
+                            "mainpage/$loggedInUser" // S'il y a un pseudo: main page
+                        } else {
+                            "login"                  // Sinon, retour au classique
+                        }
+                        NavHost(
+                            navController = navController,
+                            startDestination = startDest,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            composable("login") {
+                                LoginScreen(
+                                    onLoginSuccess = { loggedInUsername ->
+                                        navController.navigate("mainpage/$loggedInUsername") {
+                                            popUpTo("login") { inclusive = true }
+                                            launchSingleTop = true
+                                        }
+                                    },
+
+                                    onNavigateToCreateAccount = {
+                                        // launchSingleTop évite d'empiler plusieurs fois la même page si on clique vite
+                                        navController.navigate("create_account") {
+                                            launchSingleTop = true
+                                        }
+                                    }
+                                )
                             }
-                        )
-                    }
-                    composable("create_account") {
-                        NewAccountScreen(
-                            onAccountCreated = {
-                                navController.popBackStack("login", inclusive = false)
-                            },
-                            onBackToLogin = {
-                                if (navController.previousBackStackEntry != null) {
-                                    navController.popBackStack()
-                                }
+                            composable("create_account") {
+                                NewAccountScreen(
+                                    onAccountCreated = {
+                                        navController.popBackStack("login", inclusive = false)
+                                    },
+                                    onBackToLogin = {
+                                        if (navController.previousBackStackEntry != null) {
+                                            navController.popBackStack()
+                                        }
+                                    }
+                                )
                             }
-                        )
-                    }
-                    composable("mainpage/{username}") { backStackEntry ->
-                        val username = backStackEntry.arguments?.getString("username") ?: ""
-                        MainScreen(
-                            username = username,
-                            onLogout = {
-                                lifecycleScope.launch {
-                                    sessionManager.clearSession()
-                                }
-                                navController.navigate("login") {
-                                    popUpTo(0) { inclusive = true }
-                                }
+                            composable("mainpage/{username}") { backStackEntry ->
+                                val username = backStackEntry.arguments?.getString("username") ?: ""
+                                MainScreen(
+                                    username = username,
+                                    onLogout = {
+                                        lifecycleScope.launch {
+                                            sessionManager.clearSession()
+                                        }
+                                        navController.navigate("login") {
+                                            popUpTo(0) { inclusive = true }
+                                        }
+                                    }
+                                )
                             }
-                        )
+                        }
                     }
                 }
             }
