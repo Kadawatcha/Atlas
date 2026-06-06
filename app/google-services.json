@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "171638209838",
+    "project_id": "atlas-817c6",
+    "storage_bucket": "atlas-817c6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:171638209838:android:a9646039db6d36e4cfcebf",
+        "android_client_info": {
+          "package_name": "com.kadawatcha.atlas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2kqmdbxtCqRxVSPSZ9e1iyMuEO6D9N28"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

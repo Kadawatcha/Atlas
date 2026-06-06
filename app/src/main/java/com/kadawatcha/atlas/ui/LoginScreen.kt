@@ -27,17 +27,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
+import androidx.compose.ui.platform.LocalAutofillManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kadawatcha.atlas.utils.SessionManager
 import com.kadawatcha.atlas.viewmodel.LoginViewModel
 
 @Composable
@@ -47,10 +52,17 @@ fun LoginScreen(
     onLoginSuccess: (String) -> Unit,
     onNavigateToCreateAccount: () -> Unit,
 ) {
+
+    val context = LocalContext.current // recupérer données sauv
+    val autofillManager = LocalAutofillManager.current
+    val sessionManager = remember { SessionManager(context) }
+
     val scrollState = rememberScrollState()
 
     LaunchedEffect(viewModel.loginSuccess) {
         if (viewModel.loginSuccess) {
+            autofillManager?.commit()
+            sessionManager.saveSession(viewModel.username)
             onLoginSuccess(viewModel.username)
         }
     }
@@ -59,9 +71,11 @@ fun LoginScreen(
         modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .imePadding()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .imePadding()
+        ) {
             // Zone scrollable pour le contenu (Titre + Champs) centrée
             BoxWithConstraints(
                 modifier = Modifier
@@ -109,7 +123,10 @@ fun LoginScreen(
                                     contentType = ContentType.Username
                                 },
                                 leadingIcon = Icons.Default.Person,
-                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Text,
+                                    imeAction = ImeAction.Next
+                                ),
                                 isError = viewModel.usernameError || viewModel.emptyUser
                             )
 
@@ -128,7 +145,10 @@ fun LoginScreen(
                                 },
                                 leadingIcon = Icons.Default.Lock,
                                 visualTransformation = PasswordVisualTransformation(),
-                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Password,
+                                    imeAction = ImeAction.Done
+                                ),
                                 isError = viewModel.passwordError || viewModel.emptyPassword,
                             )
 

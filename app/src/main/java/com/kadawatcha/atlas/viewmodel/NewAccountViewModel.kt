@@ -72,9 +72,11 @@ class NewAccountViewModel : ViewModel() {
                 if (documents.isEmpty) {
                     db.collection("users").add(newUser).addOnSuccessListener { _ ->
                             creationSuccess = true
-                            username = ""
-                            password = ""
-                            repeatPassword = ""
+
+                            // On ne vide pas les champ (changement de page et sauv)
+                            // username = ""
+                            // password = ""
+                            // repeatPassword = ""
                         }
                 } else {
                     usernameAlreadyTaken = true

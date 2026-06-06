@@ -16,7 +16,7 @@ android {
         applicationId = "com.kadawatcha.atlas"
         minSdk = 26
         versionCode = 7
-        versionName = "1.8.0.1"
+        versionName = "1.8.1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -60,4 +60,5 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.datastore.preferences)
 }

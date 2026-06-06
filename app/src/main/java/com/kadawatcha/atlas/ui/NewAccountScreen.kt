@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
@@ -27,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
@@ -38,6 +40,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kadawatcha.atlas.viewmodel.NewAccountViewModel
+import androidx.compose.ui.platform.LocalAutofillManager
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import com.kadawatcha.atlas.utils.SessionManager
 
 @Composable
 fun NewAccountScreen(
@@ -48,8 +55,15 @@ fun NewAccountScreen(
 ) {
     val scrollState = rememberScrollState()
 
+    val context = LocalContext.current // recupérer données sauv
+    val autofillManager = LocalAutofillManager.current
+    val sessionManager = remember { SessionManager(context) }
+
     LaunchedEffect(viewModel.creationSuccess) {
         if (viewModel.creationSuccess) {
+            autofillManager?.commit()
+            sessionManager.saveSession(viewModel.username)
+
             onAccountCreated()
         }
     }
@@ -107,6 +121,10 @@ fun NewAccountScreen(
                             },
                             label = "Username",
                             leadingIcon = Icons.Default.Person,
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Next
+                            ),
                             isError = viewModel.usernameEmpty || viewModel.usernameError || viewModel.usernameAlreadyTaken || viewModel.usernameHadSpace
                         )
 
@@ -124,6 +142,10 @@ fun NewAccountScreen(
                             label = "Password",
                             leadingIcon = Icons.Default.Lock,
                             visualTransformation = PasswordVisualTransformation(),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Password,
+                                imeAction = ImeAction.Next
+                            ),
                             isError = viewModel.passwordEmpty || viewModel.passwordError || (viewModel.password.isNotEmpty() && viewModel.password.length < 8) || viewModel.passwordHadSpace,
                             supportingText = if (viewModel.password.isNotEmpty() && viewModel.password.length < 8) {
                                 { Text(text = "Must be 8+ characters") }
@@ -143,6 +165,10 @@ fun NewAccountScreen(
                             label = "Repeat Password",
                             leadingIcon = Icons.Default.Lock,
                             visualTransformation = PasswordVisualTransformation(),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Password,
+                                imeAction = ImeAction.Done
+                            ),
                             isError = viewModel.repeatEmpty || viewModel.repeatBad
                         )
 
