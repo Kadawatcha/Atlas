@@ -15,8 +15,8 @@ android {
     defaultConfig {
         applicationId = "com.kadawatcha.atlas"
         minSdk = 26
-        versionCode = 7
-        versionName = "1.8.3"
+        versionCode = 8
+        versionName = "1.9.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
