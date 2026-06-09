@@ -34,8 +34,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kadawatcha.atlas.ui.theme.AppTheme
 import com.kadawatcha.atlas.viewmodel.MainViewModel
 
 
@@ -62,9 +61,11 @@ fun MainScreen(
 ) {
 
     val isDarkTheme by viewModel.isDarkTheme.collectAsStateWithLifecycle()
-    val colorScheme = if (isDarkTheme) darkColorScheme() else lightColorScheme()
 
-    MaterialTheme(colorScheme = colorScheme) {
+    AppTheme(
+        darkTheme = isDarkTheme,
+        dynamicColor = true
+    ) { // false pour utiliser nos couleurs personnalisées
         Scaffold(
             modifier = modifier.fillMaxSize(),
             topBar = {
@@ -72,8 +73,9 @@ fun MainScreen(
                     title = {
                         PageTitle(
                             text = "Atlas",
+                            color = MaterialTheme.colorScheme.secondary,
                             textAlign = TextAlign.Start,
-                            fontSize = 30.sp
+                            fontSize = 30.sp,
                         )
                     },
                     actions = {
@@ -99,29 +101,29 @@ fun MainScreen(
 
                     CustomNavItem(
                         selected = true,
-                        onClick = { /* TODO: Navigate to Home */ },
                         icon = Icons.Default.Home,
-                        contentDescription = "home"
+                        contentDescription = "home",
+                        onClick = { /* TODO: Navigate to Home */ }
                     )
 
                     CustomNavItem(
                         selected = false,
-                        onClick = {},
                         icon = Icons.Default.ChatBubbleOutline,
-                        contentDescription = "chat"
+                        contentDescription = "chat",
+                        onClick = {}
                     )
 
                     CustomNavItem(
                         selected = false,
-                        onClick = {},
                         icon = Icons.Default.LocalFireDepartment,
-                        contentDescription = "friends"
+                        contentDescription = "friends",
+                        onClick = {}
                     )
                     CustomNavItem(
                         selected = false,
-                        onClick = { /* TODO: Navigate to Profile */ },
                         icon = Icons.Default.AccountCircle,
-                        contentDescription = "profile"
+                        contentDescription = "profile",
+                        onClick = { /* TODO: Navigate to Profile */ }
                     )
 
                 }
