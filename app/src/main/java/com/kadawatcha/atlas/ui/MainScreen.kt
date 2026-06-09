@@ -235,7 +235,7 @@ fun ThemeToggleRow(
     onToggle: () -> Unit // Une fonction "callback"
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(text = if (isDark) "Mode Sombre" else "Mode Clair")
+        Text(text = if (isDark) "Dark" else "Light")
         Spacer(Modifier.width(8.dp))
         Switch(checked = isDark, onCheckedChange = { onToggle() })
     }
