@@ -49,6 +49,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kadawatcha.atlas.ui.theme.AppTheme
 import com.kadawatcha.atlas.viewmodel.MainViewModel
+import com.kadawatcha.atlas.viewmodel.MainViewModelFactory
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,7 +58,7 @@ fun MainScreen(
     username: String,
     onLogout: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel = viewModel()
+    viewModel: MainViewModel = viewModel(factory = MainViewModelFactory)
 ) {
 
     val isDarkTheme by viewModel.isDarkTheme.collectAsStateWithLifecycle()

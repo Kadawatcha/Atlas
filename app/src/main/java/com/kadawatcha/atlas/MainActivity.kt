@@ -24,6 +24,7 @@ import com.kadawatcha.atlas.ui.MainScreen
 import com.kadawatcha.atlas.ui.NewAccountScreen
 import com.kadawatcha.atlas.ui.theme.AppTheme
 import com.kadawatcha.atlas.utils.SessionManager
+import com.kadawatcha.atlas.utils.SettingsManager
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -31,7 +32,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            AppTheme {
+            val settingsManager = remember { SettingsManager(this) }
+            val isDarkMode by settingsManager.isDarkMode.collectAsState(initial = settingsManager.isDarkTheme)
+
+            AppTheme(darkTheme = isDarkMode) {
                 val navController = rememberNavController()
 
                 // recup datas
