@@ -44,12 +44,6 @@ class SettingsManager(private val context: Context) {
      * "suspend" signifie que cette fonction peut prendre du temps (écriture sur disque).
      * Elle doit obligatoirement être appelée depuis une Coroutine (un fil d'exécution secondaire).
      */
-    suspend fun setDarkMode(isDarkMode: Boolean) {
-        context.dataStore.edit { preferences ->
-            preferences[DARK_MODE_KEY] = isDarkMode
-        }
-    }
-
     suspend fun toggleDarkMode() {
         context.dataStore.edit { preferences ->
             val current = preferences[DARK_MODE_KEY] ?: false
