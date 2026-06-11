@@ -16,7 +16,7 @@ android {
         applicationId = "com.kadawatcha.atlas"
         minSdk = 26
         versionCode = 8
-        versionName = "1.9.0"
+        versionName = "1.10.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
