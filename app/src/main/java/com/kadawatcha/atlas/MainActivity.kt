@@ -2,6 +2,7 @@ package com.kadawatcha.atlas
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
@@ -32,9 +33,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val settingsManager = remember { SettingsManager(this) }
-            val isDarkMode by settingsManager.isDarkMode.collectAsState(initial = settingsManager.isDarkTheme)
+            // On initialise le SettingsManager pour lire la préférence de thème
+            val context = LocalContext.current
+            val settingsManager = remember { SettingsManager(context) }
+            
+            // On "écoute" le Flow du thème. 'initial' est la valeur utilisée 
+            // le temps que le DataStore lise le fichier sur le téléphone.
+            val isDarkMode by settingsManager.isDarkMode.collectAsState(initial = isSystemInDarkTheme())
 
+            // On applique le thème à TOUTE l'application
             AppTheme(darkTheme = isDarkMode) {
                 val navController = rememberNavController()
 

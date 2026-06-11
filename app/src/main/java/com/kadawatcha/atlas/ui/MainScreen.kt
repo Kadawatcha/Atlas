@@ -58,9 +58,12 @@ fun MainScreen(
     username: String,
     onLogout: () -> Unit,
     modifier: Modifier = Modifier,
+    // On passe la Factory pour que Android sache comment créer le ViewModel avec son SettingsManager
     viewModel: MainViewModel = viewModel(factory = MainViewModelFactory)
 ) {
 
+    // collectAsStateWithLifecycle est la version optimisée pour Compose qui 
+    // arrête d'écouter quand l'écran n'est plus visible (gain de batterie).
     val isDarkTheme by viewModel.isDarkTheme.collectAsStateWithLifecycle()
 
     AppTheme(

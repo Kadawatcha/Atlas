@@ -10,30 +10,40 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
-private val Context.dataStore by preferencesDataStore(name = "theme")
+// On crée une instance unique de DataStore. 
+// "by preferencesDataStore" est un "délégué" qui garantit que le fichier n'est ouvert qu'une seule fois.
+private val Context.dataStore by preferencesDataStore(name = "theme_preferences")
 
 class SettingsManager(private val context: Context) {
 
-    // Dans SettingsManager.kt
+    companion object {
+        // Une clé unique pour identifier notre donnée dans le fichier.
+        // C'est comme le nom d'une colonne dans une base de données.
+        private val DARK_MODE_KEY = booleanPreferencesKey("is_dark_mode")
+    }
 
+    /**
+     * Un FLOW est un flux de données (un tuyau). 
+     * Au lieu de donner la valeur une seule fois, il prévient l'app dès que la valeur change.
+     */
     val isDarkMode: Flow<Boolean> = context.dataStore.data
         .catch { exception ->
+            // Si le fichier est corrompu ou illisible, on renvoie des préférences vides pour éviter le crash.
             if (exception is IOException) {
-                emit(emptyPreferences()) // Si erreur de lecture, on renvoie du vide
+                emit(emptyPreferences()) 
             } else {
                 throw exception
             }
         }
         .map { preferences ->
-            // Ici 'false' est ta valeur par défaut si rien n'est enregistré
+            // On récupère la valeur. Si elle est nulle (1er lancement), on renvoie 'false'.
             preferences[DARK_MODE_KEY] ?: false
         }
 
-
-    companion object {
-        private val DARK_MODE_KEY = booleanPreferencesKey("dark_mode")
-    }
-
+    /**
+     * "suspend" signifie que cette fonction peut prendre du temps (écriture sur disque).
+     * Elle doit obligatoirement être appelée depuis une Coroutine (un fil d'exécution secondaire).
+     */
     suspend fun setDarkMode(isDarkMode: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[DARK_MODE_KEY] = isDarkMode
@@ -46,5 +56,4 @@ class SettingsManager(private val context: Context) {
             preferences[DARK_MODE_KEY] = !current
         }
     }
-
 }
