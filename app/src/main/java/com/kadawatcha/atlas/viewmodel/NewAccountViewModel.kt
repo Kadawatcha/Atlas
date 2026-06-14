@@ -62,22 +62,22 @@ class NewAccountViewModel : ViewModel() {
     fun checkUsernameAndCreate(trimmedUsername: String, trimmedPassword: String) {
 
         val hashedPassword = SecurityUtils.hashPassword(trimmedPassword)
-        val newUser = User(
-            username = trimmedUsername,
-            password = hashedPassword
-        )
 
         db.collection("users").whereEqualTo("username", trimmedUsername).get()
             .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    db.collection("users").add(newUser).addOnSuccessListener { _ ->
-                            creationSuccess = true
-
-                            // On ne vide pas les champ (changement de page et sauv)
-                            // username = ""
-                            // password = ""
-                            // repeatPassword = ""
-                        }
+                if (documents.isEmpty()) {
+                    // On crée une référence de document vide pour obtenir un ID auto-généré par Firestore
+                    val newUserRef = db.collection("users").document()
+                    val newUser = User(
+                        id = newUserRef.id, // On stocke cet ID unique dans l'objet User
+                        username = trimmedUsername,
+                        password = hashedPassword
+                    )
+                    
+                    // On enregistre les données dans Firestore en utilisant l'ID unique comme nom de document
+                    newUserRef.set(newUser).addOnSuccessListener { _ ->
+                        creationSuccess = true
+                    }
                 } else {
                     usernameAlreadyTaken = true
                 }

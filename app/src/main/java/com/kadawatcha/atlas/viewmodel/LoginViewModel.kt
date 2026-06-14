@@ -22,6 +22,8 @@ class LoginViewModel : ViewModel() {
     var emptyPassword by mutableStateOf(false)
     var loginSuccess by mutableStateOf(false)
     var correctUser by mutableStateOf(false)
+    // Identifiant unique récupéré après la connexion (utilisé pour charger le profil)
+    var userId by mutableStateOf("")
 
     // La logique (le cerveau)
     fun onLoginClick() {
@@ -36,25 +38,29 @@ class LoginViewModel : ViewModel() {
         emptyUser = trimmedUsername.isEmpty()
         emptyPassword = trimmedPassword.isEmpty()
 
-        if (emptyUser || emptyPassword) return // mdp et password vide (2eme verif)
+        if (emptyUser || emptyPassword) return 
 
+        // On cherche par le champ "username". 
+        // Compatibilité : fonctionne si l'ID du document est le pseudo (anciens) 
+        // ou si c'est un ID auto-généré (nouveaux).
         db.collection("users")
             .whereEqualTo("username", trimmedUsername)
             .get()
-            .addOnSuccessListener { document ->
+            .addOnSuccessListener { querySnapshot ->
 
-                if (document.isEmpty) { // pas d'utilisateur
+                if (querySnapshot.isEmpty) { // pas d'utilisateur trouvé avec ce pseudo
                     loginSuccess = false
                     correctUser = false
                     usernameError = true
 
                 } else {
-                    val userDocument = document.documents[0]
-
-                    val realPassword = userDocument.getString("password")
+                    val document = querySnapshot.documents[0]
+                    val realPassword = document.getString("password")
                     val hashedInputPassword = SecurityUtils.hashPassword(trimmedPassword)
 
                     if (realPassword == hashedInputPassword) {
+                        // On récupère l'ID du document Firestore (notre clé unique stable)
+                        userId = document.id
                         loginSuccess = true
                     } else {
                         correctUser = true
