@@ -35,17 +35,27 @@ class MainViewModel(
             settingsManager.toggleDarkMode()
         }
     }
-}
 
-/**
- * La FACTORY : Par défaut, Android ne sait créer que des ViewModels sans arguments.
- * Comme on a besoin de lui donner le 'SettingsManager', on crée cette "recette de cuisine".
- */
-val MainViewModelFactory = object : ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-        // On récupère l'application pour avoir accès au 'Context' nécessaire au SettingsManager
-        val application = extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]!!
-        return MainViewModel(SettingsManager(application)) as T
+    /**
+     * Le COMPANION OBJECT est un bloc spécial en Kotlin.
+     * Tout ce qui est à l'intérieur est "statique" : on peut y accéder sans créer
+     * une instance de la classe (ex: MainViewModel.Factory).
+     */
+    companion object {
+        /**
+         * La FACTORY : Android ne sait pas créer de ViewModel avec des paramètres (comme SettingsManager).
+         * On crée donc cette Factory qui sert de "mode d'emploi" pour dire à Android 
+         * comment instancier correctement notre MainViewModel.
+         */
+        val Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                // On extrait l'objet 'Application' des extras pour obtenir le Context
+                val application = extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]!!
+                
+                // On crée et on retourne une instance de MainViewModel avec ses dépendances
+                return MainViewModel(SettingsManager(application)) as T
+            }
+        }
     }
 }
