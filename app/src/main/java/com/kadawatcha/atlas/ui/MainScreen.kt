@@ -93,12 +93,14 @@ fun MainScreen(
             topBar = {
                 TopAppBar(
                     title = {
-                        PageTitle(
-                            text = topAppTitle,
-                            color = MaterialTheme.colorScheme.secondary,
-                            textAlign = TextAlign.Start,
-                            fontSize = 30.sp,
-                        )
+                        Column(modifier = Modifier.padding(top = 12.dp)) {
+                            PageTitle(
+                                text = topAppTitle,
+                                color = MaterialTheme.colorScheme.onBackground,
+                                textAlign = TextAlign.Start,
+                                fontSize = 36.sp,
+                            )
+                        }
                     },
                     actions = {
                         if (currentRoute == "home") {
@@ -121,6 +123,7 @@ fun MainScreen(
             bottomBar = {
                 NavigationBar(
                     windowInsets = NavigationBarDefaults.windowInsets,
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
                 ) {
 
                     CustomNavItem(
@@ -172,17 +175,32 @@ fun MainScreen(
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(horizontal = 24.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                                .padding(horizontal = 20.dp),
+                            horizontalAlignment = Alignment.Start
                         ) {
-                            Spacer(Modifier.height(8.dp))
+                            Spacer(Modifier.height(16.dp))
 
-                            Box(modifier = Modifier.fillMaxWidth()) {
-                                Text(
-                                    text = "Welcome to Kad's app $username ",
-                                    color = MaterialTheme.colorScheme.secondary,
-                                    textAlign = TextAlign.Start
-                                )
+                            // Un petit "widget" de bienvenue arrondi style Material You
+                            Surface(
+                                color = MaterialTheme.colorScheme.secondaryContainer,
+                                shape = RoundedCornerShape(32.dp),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Column(
+                                    modifier = Modifier.padding(28.dp)
+                                ) {
+                                    Text(
+                                        text = "Hello $username !",
+                                        style = MaterialTheme.typography.headlineSmall,
+                                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                                    )
+                                    Spacer(Modifier.height(8.dp))
+                                    Text(
+                                        text = "Welcome to Atlas",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
+                                    )
+                                }
                             }
                         }
                     }
