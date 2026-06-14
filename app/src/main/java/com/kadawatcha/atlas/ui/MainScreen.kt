@@ -47,6 +47,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.kadawatcha.atlas.ui.theme.AppTheme
 import com.kadawatcha.atlas.viewmodel.MainViewModel
 
@@ -65,6 +69,21 @@ fun MainScreen(
     // arrête d'écouter quand l'écran n'est plus visible (gain de batterie).
     val isDarkTheme by viewModel.isDarkTheme.collectAsStateWithLifecycle()
 
+    // NAv contrller pour basculler entre les différents menus de mon app
+    val navController = rememberNavController()
+
+    // On récupère la route actuelle pour savoir quel bouton du menu "allumer" (selected)
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    val topAppTitle = when (currentRoute) {
+        "home" -> "Atlas"
+        "chat" -> "Messages"
+        "friends" -> "Friends"
+        "profile" -> "Atlas - your profile"
+        else -> "Atlas"
+    }
+
     AppTheme(
         darkTheme = isDarkTheme,
         dynamicColor = true
@@ -75,20 +94,22 @@ fun MainScreen(
                 TopAppBar(
                     title = {
                         PageTitle(
-                            text = "Atlas",
+                            text = topAppTitle,
                             color = MaterialTheme.colorScheme.secondary,
                             textAlign = TextAlign.Start,
                             fontSize = 30.sp,
                         )
                     },
                     actions = {
-                        MainTopMenu(
-                            isDarkTheme = isDarkTheme,
-                            onToggleTheme = { viewModel.toggleTheme() },
-                            onLogoutClick = {
-                                onLogout()
-                            }
-                        )
+                        if (currentRoute == "home") {
+                            MainTopMenu(
+                                isDarkTheme = isDarkTheme,
+                                onToggleTheme = { viewModel.toggleTheme() },
+                                onLogoutClick = {
+                                    onLogout()
+                                }
+                            )
+                        }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = Color.Transparent
@@ -103,30 +124,30 @@ fun MainScreen(
                 ) {
 
                     CustomNavItem(
-                        selected = true,
+                        selected = currentRoute == "home",
                         icon = Icons.Default.Home,
                         contentDescription = "home",
-                        onClick = { /* TODO: Navigate to Home */ }
+                        onClick = { navController.navigate("home") }
                     )
 
                     CustomNavItem(
-                        selected = false,
+                        selected = currentRoute == "chat",
                         icon = Icons.Default.ChatBubbleOutline,
                         contentDescription = "chat",
-                        onClick = {}
+                        onClick = { navController.navigate("chat") }
                     )
 
                     CustomNavItem(
-                        selected = false,
+                        selected = currentRoute == "friends",
                         icon = Icons.Default.LocalFireDepartment,
                         contentDescription = "friends",
-                        onClick = {}
+                        onClick = { navController.navigate("friends") }
                     )
                     CustomNavItem(
-                        selected = false,
+                        selected = currentRoute == "profile",
                         icon = Icons.Default.AccountCircle,
                         contentDescription = "profile",
-                        onClick = { /* TODO: Navigate to Profile */ }
+                        onClick = { navController.navigate("profile") }
                     )
 
                 }
@@ -135,29 +156,51 @@ fun MainScreen(
 
         ) { innerPadding ->
 
-            Surface( // obligé en dessous des btns sinon ça cacherai
+            Surface(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding),
                 color = MaterialTheme.colorScheme.background
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                // Le NavHost définit quel écran afficher selon la "route" actuelle
+                NavHost(
+                    navController = navController,
+                    startDestination = "home" // Route au démarrage
                 ) {
-                    Spacer(Modifier.height(8.dp))
+                    // Route pour l'accueil
+                    composable("home") {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 24.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Spacer(Modifier.height(8.dp))
 
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        Text(
-                            text = "Welcome to Kad's app $username ",
-                            color = MaterialTheme.colorScheme.secondary,
-                            textAlign = TextAlign.Start
-                        )
-
+                            Box(modifier = Modifier.fillMaxWidth()) {
+                                Text(
+                                    text = "Welcome to Kad's app $username ",
+                                    color = MaterialTheme.colorScheme.secondary,
+                                    textAlign = TextAlign.Start
+                                )
+                            }
+                        }
                     }
 
+                    // Route pour le profil
+                    composable("profile") {
+                        ProfileSettings()
+                    }
+
+                    // Route chat
+                    composable("chat") {
+                        // .
+                    }
+
+                    // Route pour les amis
+                    composable("friends") {
+                        // .
+                    }
                 }
             }
         }
