@@ -49,7 +49,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kadawatcha.atlas.ui.theme.AppTheme
 import com.kadawatcha.atlas.viewmodel.MainViewModel
-import com.kadawatcha.atlas.viewmodel.MainViewModelFactory
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,7 +58,7 @@ fun MainScreen(
     onLogout: () -> Unit,
     modifier: Modifier = Modifier,
     // On passe la Factory pour que Android sache comment créer le ViewModel avec son SettingsManager
-    viewModel: MainViewModel = viewModel(factory = MainViewModelFactory)
+    viewModel: MainViewModel = viewModel(factory = MainViewModel.Factory)
 ) {
 
     // collectAsStateWithLifecycle est la version optimisée pour Compose qui 
