@@ -28,6 +28,7 @@ class NewAccountViewModel : ViewModel() {
     var repeatEmpty by mutableStateOf(false)
     var repeatBad by mutableStateOf(false)
     var creationSuccess by mutableStateOf(false)
+    var userId by mutableStateOf("")
 
     fun onCreateAccountClick() {
         val trimmedUsername = username.trim()
@@ -76,6 +77,7 @@ class NewAccountViewModel : ViewModel() {
                     
                     // On enregistre les données dans Firestore en utilisant l'ID unique comme nom de document
                     newUserRef.set(newUser).addOnSuccessListener { _ ->
+                        userId = newUserRef.id
                         creationSuccess = true
                     }
                 } else {

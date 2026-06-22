@@ -62,7 +62,7 @@ fun NewAccountScreen(
     LaunchedEffect(viewModel.creationSuccess) {
         if (viewModel.creationSuccess) {
             autofillManager?.commit()
-            sessionManager.saveSession(viewModel.username)
+            sessionManager.saveSession(viewModel.username, viewModel.userId)
 
             onAccountCreated()
         }
