@@ -58,6 +58,7 @@ import com.kadawatcha.atlas.viewmodel.MainViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
+    userId: String,
     username: String,
     onLogout: () -> Unit,
     modifier: Modifier = Modifier,
@@ -207,7 +208,7 @@ fun MainScreen(
 
                     // Route pour le profil
                     composable("profile") {
-                        ProfileSettings()
+                        ProfileScreen(userId = userId)
                     }
 
                     // Route chat
