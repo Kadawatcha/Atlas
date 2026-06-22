@@ -21,10 +21,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigationevent.NavigationEventInfo
 import com.kadawatcha.atlas.viewmodel.profileViewModel
 
 
@@ -93,9 +91,10 @@ fun ProfileScreen(
                 viewModel.loadUserProfile(userId)
 
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            enabled = !viewModel.isLoading
         ) {
-            Text("Sauvegarder les modifications")
+            Text("Sauvegarder")
         }
     }
 }
