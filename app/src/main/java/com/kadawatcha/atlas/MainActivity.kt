@@ -33,22 +33,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            // On initialise le SettingsManager pour lire la préférence de thème
             val context = LocalContext.current
             val settingsManager = remember { SettingsManager(context) }
+            val sessionManager = remember { SessionManager(context) }
             
-            // On "écoute" le Flow du thème. 'initial' est la valeur utilisée 
-            // le temps que le DataStore lise le fichier sur le téléphone.
             val isDarkMode by settingsManager.isDarkMode.collectAsState(initial = isSystemInDarkTheme())
+            
+            val loggedInUser by sessionManager.loggedInUser.collectAsState("LOADING")
+            val loggedInUserId by sessionManager.loggedInUserId.collectAsState(null)
 
-            // On applique le thème à TOUTE l'application
             AppTheme(darkTheme = isDarkMode) {
                 val navController = rememberNavController()
-
-                // recup datas
-                val context = LocalContext.current
-                val sessionManager = remember { SessionManager(context) }
-                val loggedInUser by sessionManager.loggedInUser.collectAsState("LOADING")
 
                 Surface(color = MaterialTheme.colorScheme.background) {
 
@@ -61,9 +56,9 @@ class MainActivity : ComponentActivity() {
                         }
                     } else {
                         val startDest = if (loggedInUser != null) {
-                            "mainpage/$loggedInUser" // S'il y a un pseudo: main page
+                            "mainpage/$loggedInUser"
                         } else {
-                            "login"                  // Sinon, retour au classique
+                            "login"
                         }
                         NavHost(
                             navController = navController,
@@ -80,7 +75,6 @@ class MainActivity : ComponentActivity() {
                                     },
 
                                     onNavigateToCreateAccount = {
-                                        // launchSingleTop évite d'empiler plusieurs fois la même page si on clique vite
                                         navController.navigate("create_account") {
                                             launchSingleTop = true
                                         }
@@ -102,6 +96,7 @@ class MainActivity : ComponentActivity() {
                             composable("mainpage/{username}") { backStackEntry ->
                                 val username = backStackEntry.arguments?.getString("username") ?: ""
                                 MainScreen(
+                                    userId = loggedInUserId ?: "",
                                     username = username,
                                     onLogout = {
                                         lifecycleScope.launch {
@@ -120,4 +115,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
