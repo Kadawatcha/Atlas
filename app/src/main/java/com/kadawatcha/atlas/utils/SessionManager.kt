@@ -14,12 +14,14 @@ class SessionManager(private val context: Context) {
 
     companion object {
         val USERNAME_KEY = stringPreferencesKey("logged_in_username")
+        val USERID_KEY = stringPreferencesKey("logged_in_user_id")
     }
 
     // 1. Sauvegarder
-    suspend fun saveSession(username: String) {
+    suspend fun saveSession(username: String, userId: String) {
         context.dataStore.edit { preferences ->
             preferences[USERNAME_KEY] = username
+            preferences[USERID_KEY] = userId
         }
     }
 
@@ -29,10 +31,15 @@ class SessionManager(private val context: Context) {
         preferences[USERNAME_KEY]
     }
 
+    val loggedInUserId: Flow<String?> = context.dataStore.data.map { preferences ->
+        preferences[USERID_KEY]
+    }
+
     // 3. Déconnecter
     suspend fun clearSession() {
         context.dataStore.edit { preferences ->
             preferences.remove(USERNAME_KEY)
+            preferences.remove(USERID_KEY)
         }
     }
 }
