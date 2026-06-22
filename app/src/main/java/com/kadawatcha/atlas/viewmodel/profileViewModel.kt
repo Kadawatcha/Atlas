@@ -8,11 +8,12 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 
 
-class ProfileViewModel : ViewModel() {
+class profileViewModel : ViewModel() {
     private val db = Firebase.firestore
 
     var username by mutableStateOf("")
-    
+    // var password by mutableStateOf("")
+
     // On utilise cet ID unique pour toutes les opérations Firestore
     // C'est plus fiable que le pseudo qui pourrait changer
     var userId by mutableStateOf("")
@@ -21,11 +22,13 @@ class ProfileViewModel : ViewModel() {
      * Charge le profil à partir de l'ID unique (récupéré au login)
      */
     fun loadUserProfile(id: String) {
+        if (id.isBlank()) return
         this.userId = id
         db.collection("users").document(id).get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
                     this.username = document.getString("username") ?: ""
+                    // this.password = document.getString("password") ?: ""
                 }
             }
     }
@@ -36,7 +39,7 @@ class ProfileViewModel : ViewModel() {
     fun saveUserProfile() {
         if (userId.isBlank()) return
         
-        // On utilise update pour ne modifier que le pseudo sans écraser le reste du document
+        // On utilise update pour ne modifier que les champs nécessaires sans écraser le reste du document
         db.collection("users").document(userId)
             .update("username", username)
     }
