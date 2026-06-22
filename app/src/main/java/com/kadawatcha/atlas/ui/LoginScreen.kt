@@ -62,7 +62,7 @@ fun LoginScreen(
     LaunchedEffect(viewModel.loginSuccess) {
         if (viewModel.loginSuccess) {
             autofillManager?.commit()
-            sessionManager.saveSession(viewModel.username)
+            sessionManager.saveSession(viewModel.username, viewModel.userId)
             onLoginSuccess(viewModel.username)
         }
     }
