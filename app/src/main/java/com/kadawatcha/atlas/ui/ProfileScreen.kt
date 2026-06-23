@@ -62,7 +62,7 @@ fun ProfileScreen(
 
         CustomInput(
             value = viewModel.username,
-            onValueChange = { viewModel.username = it },
+            onValueChange = { viewModel.onUsernameChange(it) },
             label = "Username",
             isError = viewModel.usernameAlreadyTaken,
             supportingText = {
@@ -95,10 +95,9 @@ fun ProfileScreen(
         Button(
             onClick = {
                 viewModel.saveUserProfile()
-                viewModel.loadUserProfile(userId)
             },
             modifier = Modifier.fillMaxWidth(),
-            enabled = !viewModel.isLoading
+            enabled = !viewModel.isLoading && viewModel.hasChanged
         ) {
             Text("Sauvegarder")
         }
