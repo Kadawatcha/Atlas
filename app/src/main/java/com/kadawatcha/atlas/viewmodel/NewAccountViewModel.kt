@@ -8,6 +8,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.kadawatcha.atlas.model.User
 import com.kadawatcha.atlas.utils.SecurityUtils
+import com.kadawatcha.atlas.utils.Validator
 
 class NewAccountViewModel : ViewModel() {
     private val db = Firebase.firestore
@@ -47,44 +48,44 @@ class NewAccountViewModel : ViewModel() {
 
         when {
             trimmedUsername.isEmpty() -> usernameEmpty = true
-            trimmedUsername.contains(" ") -> usernameHadSpace = true
+            !Validator.isUsernameValid(username) -> {
+                if (username.contains(" ")) usernameHadSpace = true
+                else usernameError = true
+            }
+            
             trimmedPassword.isEmpty() -> passwordEmpty = true
-            trimmedPassword.contains(" ") -> passwordHadSpace = true
-            trimmedPassword.length < 8 -> passwordError = true
+            !Validator.isPasswordValid(password) -> {
+                if (password.contains(" ")) passwordHadSpace = true
+                else passwordError = true
+            }
+            
             trimmedRepeatPassword.isEmpty() -> repeatEmpty = true
             trimmedPassword != trimmedRepeatPassword -> repeatBad = true
-            else -> checkUsernameAndCreate(
-                trimmedUsername, trimmedPassword
-
-            )
+            
+            else -> checkUsernameAndCreate(trimmedUsername, trimmedPassword)
         }
     }
 
     fun checkUsernameAndCreate(trimmedUsername: String, trimmedPassword: String) {
-
         val hashedPassword = SecurityUtils.hashPassword(trimmedPassword)
 
-        db.collection("users").whereEqualTo("username", trimmedUsername).get()
-            .addOnSuccessListener { documents ->
-                if (documents.isEmpty()) {
-                    // On crée une référence de document vide pour obtenir un ID auto-généré par Firestore
-                    val newUserRef = db.collection("users").document()
-                    val newUser = User(
-                        id = newUserRef.id, // On stocke cet ID unique dans l'objet User
-                        username = trimmedUsername,
-                        password = hashedPassword
-                    )
-                    
-                    // On enregistre les données dans Firestore en utilisant l'ID unique comme nom de document
-                    newUserRef.set(newUser).addOnSuccessListener { _ ->
-                        userId = newUserRef.id
-                        creationSuccess = true
-                    }
-                } else {
-                    usernameAlreadyTaken = true
+        Validator.checkUsernameAvailability(db, trimmedUsername) { isAvailable ->
+            if (isAvailable) {
+                // On crée une référence de document vide pour obtenir un ID auto-généré par Firestore
+                val newUserRef = db.collection("users").document()
+                val newUser = User(
+                    id = newUserRef.id,
+                    username = trimmedUsername,
+                    password = hashedPassword
+                )
+                
+                newUserRef.set(newUser).addOnSuccessListener { _ ->
+                    userId = newUserRef.id
+                    creationSuccess = true
                 }
-            }.addOnFailureListener { e ->
-                println("Error checking username: $e")
+            } else {
+                usernameAlreadyTaken = true
             }
+        }
     }
 }

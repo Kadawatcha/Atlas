@@ -51,9 +51,9 @@ fun ProfileScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize(),
-                    // .background(Color.Black.copy(alpha = 0.3f)),
+                // .background(Color.Black.copy(alpha = 0.3f)),
                 contentAlignment = Alignment.Center,
-            ){
+            ) {
                 CircularProgressIndicator()
             }
         }
@@ -63,7 +63,17 @@ fun ProfileScreen(
         CustomInput(
             value = viewModel.username,
             onValueChange = { viewModel.username = it },
-            label = "Username"
+            label = "Username",
+            isError = viewModel.usernameAlreadyTaken,
+            supportingText = {
+                if (viewModel.usernameAlreadyTaken) {
+                    Text(
+                        text = "Pseudo déjà utilisé",
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -73,7 +83,6 @@ fun ProfileScreen(
             onValueChange = { password = it },
             label = "Password"
         )
-
 
         CustomInput(
             value = repeatPassword,
@@ -87,7 +96,6 @@ fun ProfileScreen(
             onClick = {
                 viewModel.saveUserProfile()
                 viewModel.loadUserProfile(userId)
-
             },
             modifier = Modifier.fillMaxWidth(),
             enabled = !viewModel.isLoading
@@ -95,4 +103,5 @@ fun ProfileScreen(
             Text("Sauvegarder")
         }
     }
+
 }

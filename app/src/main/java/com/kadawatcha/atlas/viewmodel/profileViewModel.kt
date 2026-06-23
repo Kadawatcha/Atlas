@@ -6,12 +6,17 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import com.kadawatcha.atlas.utils.Validator
 
 
 class profileViewModel : ViewModel() {
     private val db = Firebase.firestore
 
     var username by mutableStateOf("")
+
+    var usernameAlreadyTaken by mutableStateOf(false)
+
+    var hasChanged by mutableStateOf(false)
 
     // On utilise cet ID unique pour toutes les opérations Firestore
     // C'est plus fiable que le pseudo qui pourrait changer
@@ -45,16 +50,41 @@ class profileViewModel : ViewModel() {
     fun saveUserProfile() {
         if (userId.isBlank()) return
 
+        usernameAlreadyTaken = false
+
+        if (!Validator.isUsernameValid(username)) {
+            // Ici on pourrait ajouter une gestion d'erreur spécifique au format si besoin
+            return
+        }
+
         isLoading = true
         // On utilise update pour ne modifier que les champs nécessaires sans écraser le reste du document
-        db.collection("users").document(userId)
-            .update("username", username)
-            .addOnSuccessListener {
-                isLoading = false
+        db.collection("users").document(userId).get().addOnSuccessListener { document ->
+            val oldUsername = document.getString("username") ?: ""
+
+            if (username.trim() == oldUsername) {
+                performSave()
+            } else {
+                Validator.checkUsernameAvailability(db, username) { isAvailable ->
+                    if (isAvailable) {
+                        performSave()
+                    } else {
+                        usernameAlreadyTaken = true
+                        isLoading = false
+                    }
+                }
             }
-            .addOnFailureListener {
-                isLoading = false
-            }
+        }
     }
 
+
+    private fun performSave() {
+        isLoading = true
+        db.collection("users").document(userId)
+            .update("username", username.trim())
+            .addOnCompleteListener {
+                isLoading = false
+                hasChanged = false
+            }
+    }
 }
