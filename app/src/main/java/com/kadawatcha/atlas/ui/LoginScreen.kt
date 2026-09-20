@@ -19,15 +19,22 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
@@ -39,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -58,6 +66,8 @@ fun LoginScreen(
     val sessionManager = remember { SessionManager(context) }
 
     val scrollState = rememberScrollState()
+
+    var passwordVisible by remember { mutableStateOf(false) } // visu du mdp dans le champ
 
     LaunchedEffect(viewModel.loginSuccess) {
         if (viewModel.loginSuccess) {
@@ -93,7 +103,7 @@ fun LoginScreen(
                     PageTitle(text = "Atlas")
 
                     Text(
-                        text = "Welcome back!",
+                        text = "Welcome back !",
                         fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.secondary
                     )
@@ -144,8 +154,18 @@ fun LoginScreen(
                                     contentType = ContentType.Password
                                 },
                                 leadingIcon = Icons.Default.Lock,
+                                trailingIcon = {
+                                    val image = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
+                                    // Une description pour l'accessibilité (les lecteurs d'écran)
+                                    val description = if (passwordVisible) "Cacher le mot de passe" else "Afficher le mot de passe"
 
-                                visualTransformation = PasswordVisualTransformation(),
+                                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                        Icon(imageVector = image, contentDescription = description)
+                                    }
+
+                                },
+
+                                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                                 keyboardOptions = KeyboardOptions(
                                     keyboardType = KeyboardType.Password,
                                     imeAction = ImeAction.Done

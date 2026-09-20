@@ -78,7 +78,11 @@ fun CustomInput(
     label: String,
     modifier: Modifier = Modifier,
     isError: Boolean = false,
-    leadingIcon: ImageVector? = null,
+    leadingIcon: ImageVector? = null, // L'écran appelant fournit juste une image statique (peu flexible) (non obligatoire)
+    // Slot API : On demande un bloc de code Compose (@Composable).
+    // Cela permet à l'écran appelant de fournir n'importe quoi (ex: un vrai bouton cliquable IconButton)
+    // et pas seulement une image. C'est la façon "Compose" de faire des composants réutilisables.
+    trailingIcon: @Composable (() -> Unit)? = null,
     supportingText: @Composable (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -88,9 +92,12 @@ fun CustomInput(
         value = value,
         onValueChange = onValueChange,
         label = { Text(label) },
+        // On utilise ?.let pour ne créer le bloc d'icône QUE si l'image n'est pas nulle (Safe Call)
         leadingIcon = leadingIcon?.let {
             { Icon(imageVector = it, contentDescription = null, modifier = Modifier.size(20.dp)) }
         },
+        // On passe directement le "Slot" (le bloc de code). Si c'est nul, Compose n'affichera rien.
+        trailingIcon = trailingIcon,
         isError = isError,
         supportingText = supportingText,
         visualTransformation = visualTransformation,
