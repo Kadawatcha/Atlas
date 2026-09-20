@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.kadawatcha.atlas"
+    namespace = "com.kada.atlas"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.kadawatcha.atlas"
+        applicationId = "com.kada.atlas"
         minSdk = 26
         targetSdk = 37
         versionCode = 10
