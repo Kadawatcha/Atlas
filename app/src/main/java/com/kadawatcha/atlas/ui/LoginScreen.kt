@@ -144,6 +144,7 @@ fun LoginScreen(
                                     contentType = ContentType.Password
                                 },
                                 leadingIcon = Icons.Default.Lock,
+
                                 visualTransformation = PasswordVisualTransformation(),
                                 keyboardOptions = KeyboardOptions(
                                     keyboardType = KeyboardType.Password,
