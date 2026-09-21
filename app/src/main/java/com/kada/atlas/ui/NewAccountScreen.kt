@@ -44,6 +44,7 @@ import androidx.compose.ui.platform.LocalAutofillManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import android.widget.Toast
 import com.kada.atlas.utils.SessionManager
 
 @Composable
@@ -63,6 +64,8 @@ fun NewAccountScreen(
         if (viewModel.creationSuccess) {
             autofillManager?.commit()
             sessionManager.saveSession(viewModel.username, viewModel.userId)
+            
+            Toast.makeText(context, "Compte créé avec succès !", Toast.LENGTH_SHORT).show()
 
             onAccountCreated()
         }
