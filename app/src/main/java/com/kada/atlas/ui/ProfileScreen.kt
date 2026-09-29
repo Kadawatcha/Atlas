@@ -32,7 +32,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.kada.atlas.viewmodel.profileViewModel
+import com.kada.atlas.viewmodel.ProfileViewModel
 import kotlinx.coroutines.launch
 
 
@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 fun ProfileScreen(
     userId: String,
     modifier: Modifier = Modifier,
-    viewModel: profileViewModel = viewModel(),
+    viewModel: ProfileViewModel = viewModel(),
 ) {
 
     LaunchedEffect(userId) {

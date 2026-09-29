@@ -1,5 +1,6 @@
 package com.kada.atlas.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -29,6 +30,7 @@ class NewAccountViewModel : ViewModel() {
     var repeatEmpty by mutableStateOf(false)
     var repeatBad by mutableStateOf(false)
     var creationSuccess by mutableStateOf(false)
+    var firestoreError by mutableStateOf(false)
     var userId by mutableStateOf("")
 
     fun onCreateAccountClick() {
@@ -45,6 +47,7 @@ class NewAccountViewModel : ViewModel() {
         passwordHadSpace = false
         repeatEmpty = false
         repeatBad = false
+        firestoreError = false
 
         when {
             trimmedUsername.isEmpty() -> usernameEmpty = true
@@ -79,13 +82,19 @@ class NewAccountViewModel : ViewModel() {
                     password = hashedPassword
                 )
                 
-                newUserRef.set(newUser).addOnSuccessListener { _ ->
-                    userId = newUserRef.id
-                    creationSuccess = true
-                }
+                newUserRef.set(newUser)
+                    .addOnSuccessListener { _ ->
+                        userId = newUserRef.id
+                        creationSuccess = true
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.e("NewAccountViewModel", "Erreur lors de la création de l'utilisateur dans Firestore", exception)
+                        firestoreError = true
+                    }
             } else {
                 usernameAlreadyTaken = true
             }
         }
     }
 }
+

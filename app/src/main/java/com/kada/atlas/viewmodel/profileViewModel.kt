@@ -1,5 +1,6 @@
 package com.kada.atlas.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,8 +10,7 @@ import com.google.firebase.firestore.firestore
 import com.kada.atlas.utils.SecurityUtils
 import com.kada.atlas.utils.Validator
 
-
-class profileViewModel : ViewModel() {
+class ProfileViewModel : ViewModel() {
     private val db = Firebase.firestore
 
     var username by mutableStateOf("")
@@ -72,8 +72,9 @@ class profileViewModel : ViewModel() {
                 }
                 isLoading = false
             }
-            .addOnFailureListener {
+            .addOnFailureListener { exception ->
                 isLoading = false
+                Log.e("ProfileViewModel", "Erreur lors du chargement du profil", exception)
             }
     }
 
@@ -115,24 +116,28 @@ class profileViewModel : ViewModel() {
 
         isLoading = true
         // On utilise update pour ne modifier que les champs nécessaires sans écraser le reste du document
-        db.collection("users").document(userId).get().addOnSuccessListener { document ->
-            val oldUsername = document.getString("username") ?: ""
+        db.collection("users").document(userId).get()
+            .addOnSuccessListener { document ->
+                val oldUsername = document.getString("username") ?: ""
 
-            if (username.trim() == oldUsername) {
-                performSave()
-            } else {
-                Validator.checkUsernameAvailability(db, username) { isAvailable ->
-                    if (isAvailable) {
-                        performSave()
-                    } else {
-                        usernameAlreadyTaken = true
-                        isLoading = false
+                if (username.trim() == oldUsername) {
+                    performSave()
+                } else {
+                    Validator.checkUsernameAvailability(db, username) { isAvailable ->
+                        if (isAvailable) {
+                            performSave()
+                        } else {
+                            usernameAlreadyTaken = true
+                            isLoading = false
+                        }
                     }
                 }
             }
-        }
+            .addOnFailureListener { exception ->
+                isLoading = false
+                Log.e("ProfileViewModel", "Erreur lors de la récupération du profil avant sauvegarde", exception)
+            }
     }
-
 
     private fun performSave() {
         isLoading = true
@@ -151,9 +156,9 @@ class profileViewModel : ViewModel() {
 
         db.collection("users").document(userId)
             .update(updates)
-            .addOnCompleteListener {
+            .addOnCompleteListener { task ->
                 isLoading = false
-                if (it.isSuccessful) {
+                if (task.isSuccessful) {
                     initialUsername = savedUsername
                     if (password.isNotEmpty()) {
                         dbPasswordHash = SecurityUtils.hashPassword(password)
@@ -161,7 +166,13 @@ class profileViewModel : ViewModel() {
                     password = ""
                     repeatPassword = ""
                     hasChanged = false
+                } else {
+                    Log.e("ProfileViewModel", "Échec de la mise à jour du profil", task.exception)
                 }
+            }
+            .addOnFailureListener { exception ->
+                isLoading = false
+                Log.e("ProfileViewModel", "Erreur lors de la sauvegarde du profil", exception)
             }
     }
 }

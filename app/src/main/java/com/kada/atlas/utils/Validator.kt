@@ -1,5 +1,6 @@
 package com.kada.atlas.utils
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 
 object Validator {
@@ -39,8 +40,10 @@ object Validator {
             .addOnSuccessListener { query ->
                 onResult(query.isEmpty)
             }
-            .addOnFailureListener {
+            .addOnFailureListener { exception ->
+                Log.e("Validator", "Erreur lors de la vérification de disponibilité du pseudo: ${exception.message}", exception)
                 onResult(false) // Par sécurité, on considère indisponible en cas d'erreur
             }
     }
 }
+
