@@ -9,6 +9,9 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.Month
+import java.time.temporal.ChronoUnit
 
 class MainViewModel(
     private val settingsManager: SettingsManager
@@ -58,4 +61,24 @@ class MainViewModel(
             }
         }
     }
+
+
+    val daysBeforeChristmas: StateFlow<String> = kotlinx.coroutines.flow.flow {
+        val today = LocalDate.now()
+        var noel = LocalDate.of(today.year, Month.DECEMBER, 25)
+        if (today.isAfter(noel)) {
+            noel = LocalDate.of(today.year + 1, Month.DECEMBER, 25)
+        }
+        val days = ChronoUnit.DAYS.between(today, noel)
+        val text = if (days == 0L) {
+            "Joyeux Noël ! 🎄"
+        } else {
+            "Il reste $days jours avant Noël 🎅"
+        }
+        emit(text)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = "Calcul des jours avant Noël..."
+    )
 }

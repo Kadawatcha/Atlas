@@ -70,6 +70,7 @@ fun MainScreen(
     // collectAsStateWithLifecycle est la version optimisée pour Compose qui 
     // arrête d'écouter quand l'écran n'est plus visible (gain de batterie).
     val isDarkTheme by viewModel.isDarkTheme.collectAsStateWithLifecycle()
+    val daysBeforeChristmas by viewModel.daysBeforeChristmas.collectAsStateWithLifecycle()
 
     // NAv contrller pour basculler entre les différents menus de mon app
     val navController = rememberNavController()
@@ -198,7 +199,7 @@ fun MainScreen(
                                     )
                                     Spacer(Modifier.height(8.dp))
                                     Text(
-                                        text = "Welcome to Atlas",
+                                        text = daysBeforeChristmas,
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
                                     )
