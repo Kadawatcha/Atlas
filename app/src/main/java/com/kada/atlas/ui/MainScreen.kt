@@ -2,6 +2,7 @@ package com.kada.atlas.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -201,10 +203,16 @@ fun MainScreen(
                                     Text(
                                         text = daysBeforeChristmas,
                                         style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
+                                        color = MaterialTheme.colorScheme.onSecondaryContainer.copy(
+                                            alpha = 0.7f
+                                        )
                                     )
                                 }
                             }
+
+                            Spacer(Modifier.height(16.dp))
+
+                            PostFeed(modifier = Modifier.weight(1f))
                         }
                     }
 
@@ -230,11 +238,13 @@ fun MainScreen(
                             }
                         }
 
-                        androidx.compose.foundation.lazy.LazyColumn(
+                        LazyColumn(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(horizontal = 20.dp),
-                            contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 16.dp)
+                            contentPadding = PaddingValues(
+                                vertical = 16.dp
+                            )
                         ) {
                             item {
                                 Text(
@@ -333,5 +343,28 @@ fun ThemeToggleRow(
         Text(text = if (isDark) "Dark" else "Light")
         Spacer(Modifier.width(8.dp))
         Switch(checked = isDark, onCheckedChange = { onToggle() })
+    }
+}
+
+@Composable
+private fun PostFeed(modifier: Modifier = Modifier) {
+    val posts = remember { listOf("Post 1", "Post 2", "Post 3") }
+
+    LazyColumn(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
+    ) {
+        items(posts) { post ->
+            Surface(
+                shape = RoundedCornerShape(16.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant
+            ) {
+                Text(
+                    text = post,
+                    modifier = Modifier.padding(16.dp),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+        }
     }
 }
