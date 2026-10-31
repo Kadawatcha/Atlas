@@ -178,9 +178,7 @@ fun MainScreen(
                     // Route pour l'accueil
                     composable("home") {
                         Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(horizontal = 20.dp),
+                            modifier = Modifier.fillMaxSize(),
                             horizontalAlignment = Alignment.Start
                         ) {
                             Spacer(Modifier.height(16.dp))
@@ -189,7 +187,9 @@ fun MainScreen(
                             Surface(
                                 color = MaterialTheme.colorScheme.secondaryContainer,
                                 shape = RoundedCornerShape(32.dp),
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 20.dp)
                             ) {
                                 Column(
                                     modifier = Modifier.padding(28.dp)
@@ -352,10 +352,12 @@ private fun PostFeed(modifier: Modifier = Modifier) {
 
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp),
         verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
     ) {
         items(posts) { post ->
             Surface(
+                modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
                 color = MaterialTheme.colorScheme.surfaceVariant
             ) {
