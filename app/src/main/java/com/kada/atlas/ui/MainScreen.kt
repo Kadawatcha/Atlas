@@ -201,7 +201,7 @@ fun MainScreen(
                         Column {
                             Text(
                                 text = buildAnnotatedString {
-                                    append("Auteur :")
+                                    append("Auteur : ")
                                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                                         append(username)
                                     }
