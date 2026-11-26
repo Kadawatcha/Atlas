@@ -7,7 +7,7 @@ plugins {
 android {
     namespace = "com.kada.atlas"
     compileSdk = 37
-
+    compileSdkMinor = 2
     defaultConfig {
         applicationId = "com.kada.atlas"
         minSdk = 26
