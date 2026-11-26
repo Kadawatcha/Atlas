@@ -17,6 +17,17 @@ class MainViewModel(
     private val settingsManager: SettingsManager
 ) : ViewModel() {
 
+    private val _posts = kotlinx.coroutines.flow.MutableStateFlow<List<com.kada.atlas.model.Post>>(emptyList())
+    val posts: StateFlow<List<com.kada.atlas.model.Post>> = _posts
+
+    fun addPost(author: String, content: String){
+        val newPost = com.kada.atlas.model.Post(
+            author = author,
+            content = content
+        )
+        _posts.value = listOf(newPost) + _posts.value
+    }
+
     /**
      * stateIn transforme un Flow "froid" (qui ne s'active que si on l'écoute) 
      * en StateFlow "chaud" (qui garde toujours la dernière valeur en mémoire).

@@ -24,6 +24,8 @@ import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -82,6 +84,7 @@ fun MainScreen(
     // arrête d'écouter quand l'écran n'est plus visible (gain de batterie).
     val isDarkTheme by viewModel.isDarkTheme.collectAsStateWithLifecycle()
     val daysBeforeChristmas by viewModel.daysBeforeChristmas.collectAsStateWithLifecycle()
+    val posts by viewModel.posts.collectAsStateWithLifecycle()
 
     // NAv contrller pour basculler entre les différents menus de mon app
     val navController = rememberNavController()
@@ -215,14 +218,19 @@ fun MainScreen(
                                 onValueChange = { postContent = it },
                                 label = { Text("Qu'avez-vous en tête ?") },
                                 modifier = Modifier.fillMaxWidth(),
-                                minLines = 3
+                                minLines = 3, // taille de départ de la zone de texte
+                                maxLines = 50, // c'est dans le nom
                             )
                         }
                     },
                     confirmButton = {
-                        TextButton(
+                        Button(
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.secondary
+                            ),
                             onClick = {
                                 if (postContent.isNotBlank()) {
+                                    viewModel.addPost(author = username, content = postContent)
                                     postContent = ""
                                     showCreatePostDialog = false
                                 }
@@ -292,7 +300,10 @@ fun MainScreen(
 
                             Spacer(Modifier.height(16.dp))
 
-                            PostFeed(modifier = Modifier.weight(1f))
+                            PostFeed(
+                                posts = posts,
+                                modifier = Modifier.weight(1f)
+                            )
                         }
                     }
 
@@ -427,8 +438,11 @@ fun ThemeToggleRow(
 }
 
 @Composable
-private fun PostFeed(modifier: Modifier = Modifier) {
-    val posts = remember { listOf("Post 1", "Post 2", "Post 3") }
+private fun PostFeed(
+    posts: List<com.kada.atlas.model.Post>,
+    modifier: Modifier = Modifier
+) {
+
 
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
@@ -441,11 +455,18 @@ private fun PostFeed(modifier: Modifier = Modifier) {
                 shape = RoundedCornerShape(16.dp),
                 color = MaterialTheme.colorScheme.surfaceVariant
             ) {
-                Text(
-                    text = post,
-                    modifier = Modifier.padding(16.dp),
-                    style = MaterialTheme.typography.bodyLarge
-                )
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = post.author,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = post.content,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             }
         }
     }
